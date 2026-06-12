@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Morgana — Play Aid</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Marcellus+SC&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -12,57 +12,59 @@
   --surface:rgba(255,252,244,0.85);
   --surface2:rgba(255,252,244,0.65);
   --surface3:rgba(240,234,216,0.55);
-  --ink:#1c160a;
-  --gold:#2c2420;
+  --ink:#1a1308;
+  --gold:#6b4a1e;
   --gold-dim:rgba(44,36,32,0.07);
   --gold-border:rgba(44,36,32,0.2);
-  --loki:#2a5428;
-  --loki-dim:rgba(42,84,40,0.09);
-  --loki-border:rgba(42,84,40,0.3);
-  --siris:#4a1870;
-  --siris-dim:rgba(74,24,112,0.09);
-  --siris-border:rgba(74,24,112,0.3);
-  --circe:#7a4515;
-  --circe-dim:rgba(122,69,21,0.09);
-  --circe-border:rgba(122,69,21,0.3);
-  --blood:#7a1a1a;
-  --blood-dim:rgba(122,26,26,0.10);
-  --blood-border:rgba(122,26,26,0.3);
-  --text:#1c160a;
-  --soft:#6a5a3a;
-  --muted:#a89878;
-  --green:#1e6020;
-  --orange:#b06010;
-  --red:#8a1a1a;
+  --leaf:#a8852e;
+  --loki:#1f4a26;
+  --loki-dim:rgba(31,74,38,0.09);
+  --loki-border:rgba(31,74,38,0.32);
+  --siris:#5a1a82;
+  --siris-dim:rgba(90,26,130,0.09);
+  --siris-border:rgba(90,26,130,0.32);
+  --circe:#8a4a12;
+  --circe-dim:rgba(138,74,18,0.09);
+  --circe-border:rgba(138,74,18,0.32);
+  --blood:#8a1414;
+  --blood-dim:rgba(138,20,20,0.10);
+  --blood-border:rgba(138,20,20,0.32);
+  --text:#1a1308;
+  --soft:#5e4e30;
+  --muted:#9a8868;
+  --green:#1c5c1e;
+  --orange:#b85e0e;
+  --red:#921616;
 }
 body{
-  background:radial-gradient(circle at top left,rgba(60,40,20,.07),transparent 35%),radial-gradient(circle at bottom right,rgba(10,0,0,.06),transparent 40%),linear-gradient(to bottom,#ede0c8,#d8cdb5);
-  font-family:'EB Garamond',Georgia,serif;
-  font-size:16px;color:var(--text);min-height:100vh;padding:0
+  background:radial-gradient(circle at top left,rgba(60,40,20,.08),transparent 35%),radial-gradient(circle at bottom right,rgba(20,5,5,.07),transparent 40%),linear-gradient(to bottom,#ece0c6,#d4c9b0);
+  font-family:'Crimson Pro',Georgia,serif;
+  font-size:19px;color:var(--text);min-height:100vh;padding:0
 }
 #paper-grain{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
 .app-header,.content-wrap{position:relative;z-index:10}
 .app-header{background:rgba(237,229,212,0.96);border-bottom:1px solid rgba(44,36,32,0.18);padding:14px 20px 0;display:flex;flex-direction:column;position:sticky;top:0;z-index:100}
 .header-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px;flex-wrap:wrap}
-.char-name{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--ink);letter-spacing:0.04em}
-.char-sub{font-size:13px;color:var(--soft);font-style:italic}
-.rank-badge{font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;background:var(--blood-dim);border:1px solid var(--blood-border);color:var(--blood)}
-.save-status{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);opacity:0;transition:opacity .3s}
+.char-name{font-family:'Marcellus',serif;font-size:25px;font-weight:700;color:var(--ink);letter-spacing:0.04em}
+.char-sub{font-size:15px;color:var(--soft);font-style:italic}
+.rank-badge{font-family:'Marcellus',serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;background:var(--blood-dim);border:1px solid var(--blood-border);color:var(--blood)}
+.save-status{font-family:'Marcellus',serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);opacity:0;transition:opacity .3s}
 .save-status.show{opacity:0.7}
-.reset-btn{font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;background:transparent;border:1px solid var(--gold-border);color:var(--soft);cursor:pointer;transition:all .15s;border-radius:2px}
+.reset-btn{font-family:'Marcellus',serif;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;background:transparent;border:1px solid var(--gold-border);color:var(--soft);cursor:pointer;transition:all .15s;border-radius:2px}
 .reset-btn:hover{background:var(--blood-dim);border-color:var(--blood-border);color:var(--blood)}
 .tabs{display:flex;gap:0;border-top:1px solid rgba(44,36,32,0.12);overflow-x:auto}
-.tab{font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:10px 18px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:color .15s,border-color .15s;user-select:none;white-space:nowrap}
+.tab{font-family:'Marcellus',serif;font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:10px 18px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:color .15s,border-color .15s;user-select:none;white-space:nowrap}
 .tab:hover{color:var(--ink)}
 .tab.active{color:var(--ink);border-bottom-color:var(--ink)}
 .content-wrap{max-width:820px;margin:0 auto}
 .content{padding:20px;display:none}
 .content.active{display:block}
 .section{margin-bottom:22px}
-.section-title{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(44,36,32,0.15)}
+.section-title{font-family:'Marcellus',serif;font-size:11.5px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid rgba(107,74,30,0.25);position:relative}
+.section-title::after{content:'';position:absolute;left:0;bottom:-1px;width:42px;height:1px;background:linear-gradient(90deg,var(--leaf),transparent)}
 
 /* CARDS */
-.card{background:rgba(250,244,232,.72);border:1px solid rgba(40,20,10,.12);position:relative;overflow:hidden;padding:14px 16px}
+.card{background:rgba(250,244,232,.78);border:1px solid rgba(40,20,10,.14);position:relative;overflow:hidden;padding:15px 17px;box-shadow:inset 0 0 30px rgba(90,60,30,0.05),0 1px 2px rgba(40,20,10,0.04)}
 .card+.card{margin-top:8px}
 .card::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(70,50,30,.015) 0px,rgba(70,50,30,.015) 1px,transparent 1px,transparent 4px);opacity:.35;pointer-events:none;mix-blend-mode:multiply}
 .card>*{position:relative;z-index:1}
@@ -79,8 +81,8 @@ body{
 .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 @media(max-width:500px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
 .stat-pill{background:var(--surface);border:1px solid rgba(44,36,32,0.1);padding:10px 8px;text-align:center}
-.stat-val{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--ink);line-height:1}
-.stat-lbl{font-size:10px;color:var(--soft);font-style:italic;margin-top:2px}
+.stat-val{font-family:'Marcellus',serif;font-size:27px;font-weight:700;color:var(--ink);line-height:1}
+.stat-lbl{font-size:12.5px;color:var(--soft);font-style:italic;margin-top:2px}
 
 /* DOTS */
 .dot-track{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
@@ -95,10 +97,10 @@ body{
 .raven-track{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;align-items:center}
 .raven-mark{width:18px;height:18px;border-radius:2px;background:var(--siris);border:2px solid var(--siris);cursor:pointer;transition:opacity .15s;flex-shrink:0}
 .raven-mark.empty{background:transparent;opacity:0.3}
-.raven-threshold{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--siris);opacity:0.6;padding:0 4px}
+.raven-threshold{font-family:'Marcellus',serif;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--siris);opacity:0.6;padding:0 4px}
 
 /* TAGS */
-.tag{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:2px 7px;border:1px solid}
+.tag{font-family:'Marcellus',serif;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:2px 7px;border:1px solid}
 .tag-loki{background:var(--loki-dim);color:var(--loki);border-color:var(--loki-border)}
 .tag-siris{background:var(--siris-dim);color:var(--siris);border-color:var(--siris-border)}
 .tag-circe{background:var(--circe-dim);color:var(--circe);border-color:var(--circe-border)}
@@ -108,28 +110,32 @@ body{
 .tag-red{background:rgba(138,26,26,0.07);color:var(--red);border-color:rgba(138,26,26,0.3)}
 
 /* GIFT LAYOUT */
-.gift-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
-.gift-title-main{font-family:'Cinzel',serif;font-size:18px;font-weight:700;letter-spacing:0.04em}
+.gift-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;padding-bottom:8px;border-bottom:1px solid rgba(107,74,30,0.18)}
+.gift-title-main{font-family:'Marcellus SC',serif;font-size:24px;font-weight:400;letter-spacing:0.06em}
 .gift-title-main.loki{color:var(--loki)}
 .gift-title-main.siris{color:var(--siris)}
 .gift-title-main.circe{color:var(--circe)}
-.gift-name{font-family:'Cinzel',serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;letter-spacing:0.02em}
+.gift-name{font-family:'Marcellus',serif;font-size:19px;font-weight:400;color:var(--text);margin-bottom:7px;letter-spacing:0.03em}
 .gift-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.gift-flavor{font-size:14px;font-style:italic;color:var(--muted);margin-bottom:8px;line-height:1.5}
-.gift-text{font-size:14px;color:var(--text);line-height:1.75;margin-bottom:8px}
+.gift-flavor{font-size:16.5px;font-style:italic;color:var(--muted);margin-bottom:8px;line-height:1.5}
+.gift-text{font-size:17px;color:var(--text);line-height:1.75;margin-bottom:8px}
+.gift-text.dropcap::first-letter{font-family:'Cormorant Garamond',serif;font-size:3.4em;line-height:0.74;float:left;margin:7px 10px 0 0;font-weight:600;text-shadow:0 1px 0 rgba(255,255,255,0.4)}
+.card.loki .gift-text.dropcap::first-letter{color:var(--loki)}
+.card.siris .gift-text.dropcap::first-letter{color:var(--siris)}
+.card.circe .gift-text.dropcap::first-letter{color:var(--circe)}
 .gift-extras{margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,0.07)}
-.extra-item{font-size:13px;color:var(--soft);line-height:1.6;padding:3px 0 3px 14px;position:relative}
+.extra-item{font-size:16px;color:var(--soft);line-height:1.6;padding:3px 0 3px 14px;position:relative}
 .extra-item::before{content:'·';position:absolute;left:0;color:var(--muted)}
 .extra-item strong{color:var(--text)}
 
 /* COST BLOCK */
 .cost-block{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:4px;margin-bottom:10px;background:var(--surface3);border:1px solid rgba(44,36,32,0.08);padding:8px 10px}
-.cost-row{font-size:13px;line-height:1.5}
-.cost-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);display:block}
+.cost-row{font-size:15px;line-height:1.5}
+.cost-lbl{font-family:'Marcellus',serif;font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);display:block}
 .cost-val{color:var(--text);font-weight:500}
 
 /* NOTES */
-.note{font-size:13px;line-height:1.55;padding:8px 12px;border-left:2px solid;margin-top:8px}
+.note{font-size:15px;line-height:1.55;padding:8px 12px;border-left:2px solid;margin-top:8px}
 .note-ink{border-color:var(--ink);background:var(--gold-dim);color:var(--ink)}
 .note-blood{border-color:var(--blood);background:var(--blood-dim);color:var(--blood)}
 .note-siris{border-color:var(--siris);background:var(--siris-dim);color:var(--siris)}
@@ -139,58 +145,58 @@ body{
 
 /* RAVEN RISK */
 .raven-risk{background:rgba(74,24,112,0.06);border:1px solid rgba(74,24,112,0.2);border-left:3px solid var(--siris);padding:8px 12px;margin-top:8px}
-.raven-risk-label{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--siris);margin-bottom:3px}
-.raven-risk-text{font-size:13px;color:var(--siris);line-height:1.55}
+.raven-risk-label{font-family:'Marcellus',serif;font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--siris);margin-bottom:3px}
+.raven-risk-text{font-size:15.5px;color:var(--siris);line-height:1.55}
 
 /* BRANCH BOX */
-.branch-box{background:var(--siris-dim);border:1px solid var(--siris-border);padding:10px 14px;margin:10px 0;font-size:13.5px;color:var(--siris);line-height:1.65}
+.branch-box{background:var(--siris-dim);border:1px solid var(--siris-border);padding:12px 16px;margin:10px 0;font-size:16px;color:var(--siris);line-height:1.65}
 
 /* BANE CARD */
 .bane-card{background:rgba(20,5,5,0.92);border:1px solid rgba(122,26,26,0.4);border-left:3px solid var(--blood);padding:18px 20px;position:relative;overflow:hidden}
 .bane-card::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(122,26,26,.025) 0px,rgba(122,26,26,.025) 1px,transparent 1px,transparent 4px);pointer-events:none}
-.bane-eyebrow{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--blood);margin-bottom:6px;opacity:0.8}
-.bane-title{font-family:'Cinzel',serif;font-size:17px;font-weight:700;color:#e8cece;letter-spacing:0.04em;margin-bottom:2px}
-.bane-subtitle{font-size:12px;color:rgba(200,160,160,0.7);font-style:italic;margin-bottom:14px}
+.bane-eyebrow{font-family:'Marcellus',serif;font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--blood);margin-bottom:6px;opacity:0.8}
+.bane-title{font-family:'Marcellus',serif;font-size:21px;font-weight:700;color:#e8cece;letter-spacing:0.04em;margin-bottom:2px}
+.bane-subtitle{font-size:13.5px;color:rgba(200,160,160,0.7);font-style:italic;margin-bottom:14px}
 .bane-divider{width:100%;height:1px;background:linear-gradient(90deg,rgba(122,26,26,0.5),transparent);margin-bottom:14px}
 .bane-sub{margin-bottom:14px}
-.bane-sub-label{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(200,140,140,0.7);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.bane-sub-label{font-family:'Marcellus',serif;font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(200,140,140,0.7);margin-bottom:6px;display:flex;align-items:center;gap:8px}
 .bane-sub-label::after{content:'';flex:1;height:1px;background:rgba(122,26,26,0.3)}
-.bane-sub-text{font-size:14px;color:rgba(220,190,190,0.85);line-height:1.75}
-.bane-example{font-size:13px;color:rgba(180,140,140,0.75);font-style:italic;padding:4px 0 4px 12px;border-left:1px solid rgba(122,26,26,0.3);margin-top:4px}
-.bane-trigger{display:inline-flex;align-items:center;gap:6px;font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;background:rgba(122,26,26,0.2);border:1px solid rgba(122,26,26,0.3);color:rgba(200,140,140,0.9);margin:3px 3px 3px 0}
+.bane-sub-text{font-size:16.5px;color:rgba(220,190,190,0.85);line-height:1.75}
+.bane-example{font-size:14.5px;color:rgba(180,140,140,0.75);font-style:italic;padding:4px 0 4px 12px;border-left:1px solid rgba(122,26,26,0.3);margin-top:4px}
+.bane-trigger{display:inline-flex;align-items:center;gap:6px;font-family:'Marcellus',serif;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;background:rgba(122,26,26,0.2);border:1px solid rgba(122,26,26,0.3);color:rgba(200,140,140,0.9);margin:3px 3px 3px 0}
 
 /* MASK DIRGE */
 .md-card{background:var(--surface);border:1px solid rgba(44,36,32,0.1);padding:14px 16px}
-.md-label{font-family:'Cinzel',serif;font-size:8px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-.md-name{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:6px}
-.md-text{font-size:13.5px;color:var(--soft);line-height:1.65}
-.md-quest{font-size:12px;color:var(--green);margin-top:8px;padding:4px 8px;background:rgba(30,96,32,0.06);border-left:2px solid var(--green);font-style:italic}
-.md-ban{font-size:12px;color:var(--red);margin-top:4px;padding:4px 8px;background:rgba(138,26,26,0.05);border-left:2px solid var(--red);font-style:italic}
+.md-label{font-family:'Marcellus',serif;font-size:8px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.md-name{font-family:'Marcellus',serif;font-size:17.5px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.md-text{font-size:16.5px;color:var(--soft);line-height:1.65}
+.md-quest{font-size:14.5px;color:var(--green);margin-top:8px;padding:5px 10px;background:rgba(30,96,32,0.06);border-left:2px solid var(--green);font-style:italic;line-height:1.5}
+.md-ban{font-size:14.5px;color:var(--red);margin-top:4px;padding:5px 10px;background:rgba(138,26,26,0.05);border-left:2px solid var(--red);font-style:italic;line-height:1.5}
 
 /* MERITS */
 .merit-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05)}
 .merit-row:last-child{border-bottom:none}
 .merit-body{flex:1}
-.merit-name{font-size:14.5px;color:var(--text);font-weight:500;margin-bottom:3px}
-.merit-prereq{font-size:11px;color:var(--muted);font-family:'Cinzel',serif;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:5px}
-.merit-dots{font-family:'Cinzel',serif;font-size:13px;color:var(--muted);white-space:nowrap;letter-spacing:0.04em;flex-shrink:0;padding-top:2px}
-.merit-desc{font-size:13.5px;color:var(--soft);line-height:1.65}
-.merit-mech{font-size:13px;color:var(--ink);background:rgba(44,36,32,0.05);border-left:2px solid rgba(44,36,32,0.2);padding:4px 10px;margin-top:6px;line-height:1.6}
+.merit-name{font-size:17.5px;color:var(--text);font-weight:500;margin-bottom:3px}
+.merit-prereq{font-size:12.5px;color:var(--muted);font-family:'Marcellus',serif;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:5px}
+.merit-dots{font-family:'Marcellus',serif;font-size:15px;color:var(--muted);white-space:nowrap;letter-spacing:0.04em;flex-shrink:0;padding-top:2px}
+.merit-desc{font-size:16.5px;color:var(--soft);line-height:1.65}
+.merit-mech{font-size:15.5px;color:var(--ink);background:rgba(44,36,32,0.05);border-left:2px solid rgba(44,36,32,0.2);padding:4px 10px;margin-top:6px;line-height:1.6}
 
 /* MOBILIZE */
 .mo-step{display:grid;grid-template-columns:36px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid rgba(122,26,26,0.08)}
 .mo-step:last-child{border-bottom:none}
-.mo-num{width:36px;height:36px;border-radius:50%;background:rgba(122,26,26,0.08);border:1.5px solid rgba(122,26,26,0.3);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--blood);flex-shrink:0;align-self:start;margin-top:1px}
-.mo-title{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--blood);margin-bottom:4px;letter-spacing:0.04em}
-.mo-body{font-size:13.5px;color:var(--soft);line-height:1.65}
+.mo-num{width:36px;height:36px;border-radius:50%;background:rgba(122,26,26,0.08);border:1.5px solid rgba(122,26,26,0.3);display:flex;align-items:center;justify-content:center;font-family:'Marcellus',serif;font-size:14px;font-weight:700;color:var(--blood);flex-shrink:0;align-self:start;margin-top:1px}
+.mo-title{font-family:'Marcellus',serif;font-size:15px;font-weight:700;color:var(--blood);margin-bottom:4px;letter-spacing:0.04em}
+.mo-body{font-size:16.5px;color:var(--soft);line-height:1.65}
 
 /* FLAWS */
 .flaw-card{background:rgba(122,26,26,0.04);border:1px solid rgba(122,26,26,0.15);border-left:3px solid var(--blood);padding:13px 15px;margin-top:8px}
 .flaw-header{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px}
-.flaw-name{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--blood);letter-spacing:0.02em}
-.flaw-pts{font-family:'Cinzel',serif;font-size:10px;color:rgba(122,26,26,0.6);letter-spacing:0.08em;text-transform:uppercase}
-.flaw-text{font-size:13.5px;color:var(--soft);line-height:1.7}
-.flaw-mech{font-size:13px;color:var(--red);background:rgba(122,26,26,0.06);border-left:2px solid rgba(122,26,26,0.3);padding:4px 10px;margin-top:6px;line-height:1.6}
+.flaw-name{font-family:'Marcellus',serif;font-size:16.5px;font-weight:700;color:var(--blood);letter-spacing:0.02em}
+.flaw-pts{font-family:'Marcellus',serif;font-size:11px;color:rgba(122,26,26,0.6);letter-spacing:0.08em;text-transform:uppercase}
+.flaw-text{font-size:16.5px;color:var(--soft);line-height:1.7}
+.flaw-mech{font-size:15.5px;color:var(--red);background:rgba(122,26,26,0.06);border-left:2px solid rgba(122,26,26,0.3);padding:4px 10px;margin-top:6px;line-height:1.6}
 
 /* ADAPTATIONS */
 .adapt-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
@@ -202,25 +208,28 @@ body{
 .adapt-check{width:14px;height:14px;border:1.5px solid var(--loki);flex-shrink:0;margin-top:2px;position:relative;transition:background .15s}
 .adapt-item.chosen .adapt-check{background:var(--loki)}
 .adapt-item.chosen .adapt-check::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700}
-.adapt-name{font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--loki);letter-spacing:0.04em;margin-bottom:3px}
+.adapt-name{font-family:'Marcellus',serif;font-size:11px;font-weight:700;color:var(--loki);letter-spacing:0.04em;margin-bottom:3px}
 .adapt-desc{font-size:12px;color:var(--soft);line-height:1.45}
 
 /* ANIMAL FORMS */
 .form-block{background:var(--surface);border:1px solid rgba(44,36,32,0.12);padding:16px;margin-bottom:12px}
-.form-name{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--loki);margin-bottom:12px;letter-spacing:0.03em}
+.form-name{font-family:'Marcellus',serif;font-size:20px;font-weight:700;color:var(--loki);margin-bottom:12px;letter-spacing:0.03em}
 .form-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
 @media(max-width:480px){.form-stat-grid{grid-template-columns:repeat(2,1fr)}}
 .form-stat{background:var(--loki-dim);border:1px solid var(--loki-border);padding:6px 8px;text-align:center}
-.form-stat-val{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--loki);line-height:1}
-.form-stat-lbl{font-size:9px;color:var(--loki);letter-spacing:0.06em;text-transform:uppercase;opacity:0.75;margin-top:1px}
-.attr-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px;font-weight:600}
-.attr-text{font-size:13px;color:var(--soft);line-height:1.6;margin-bottom:10px}
-.attack-row{display:grid;grid-template-columns:1fr auto auto;gap:8px;font-size:13px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.05);align-items:center}
-.attack-row.header{font-family:'Cinzel',serif;font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);border-bottom:1px solid rgba(44,36,32,0.15)}
-.attack-val{text-align:center;font-family:'Cinzel',serif;font-weight:600;font-size:14px;color:var(--loki)}
+.form-stat-val{font-family:'Marcellus',serif;font-size:16px;font-weight:700;color:var(--loki);line-height:1}
+.form-stat-lbl{font-size:10px;color:var(--loki);letter-spacing:0.06em;text-transform:uppercase;opacity:0.75;margin-top:1px}
+.attr-label{font-family:'Marcellus',serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px;font-weight:600}
+.attr-text{font-size:15px;color:var(--soft);line-height:1.6;margin-bottom:10px}
+.attack-row{display:grid;grid-template-columns:1fr auto auto;gap:8px;font-size:14px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.05);align-items:center}
+.attack-row.header{font-family:'Marcellus',serif;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);border-bottom:1px solid rgba(44,36,32,0.15)}
+.attack-val{text-align:center;font-family:'Marcellus',serif;font-weight:600;font-size:14px;color:var(--loki)}
 
 /* DIVIDER */
-.brush-divider{height:28px;margin:22px 0;background:linear-gradient(90deg,transparent,rgba(0,0,0,.12),rgba(0,0,0,.08),transparent);opacity:.5;clip-path:polygon(0 45%,9% 38%,20% 52%,35% 44%,52% 58%,70% 40%,88% 55%,100% 48%,100% 65%,0 58%)}
+.brush-divider{display:flex;align-items:center;justify-content:center;gap:14px;margin:26px 0;color:var(--leaf);opacity:0.8}
+.brush-divider::before,.brush-divider::after{content:'';height:1px;width:90px;max-width:28%;background:linear-gradient(90deg,transparent,rgba(168,133,46,0.6))}
+.brush-divider::after{background:linear-gradient(90deg,rgba(168,133,46,0.6),transparent)}
+.brush-divider span{font-family:'Marcellus',serif;font-size:14px;letter-spacing:0.3em;color:var(--leaf);opacity:0.9}
 
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -238,8 +247,8 @@ body{
   <div class="header-top">
     <div>
       <span class="char-name">🩸 Morgana</span>
-      <span style="font-family:'Cinzel',serif;font-size:12px;color:var(--ink);opacity:0.35;margin:0 8px">·</span>
-      <span style="font-family:'Cinzel',serif;font-size:12px;color:var(--ink);opacity:0.55;letter-spacing:0.14em;text-transform:uppercase">Alice Machado Lima</span>
+      <span style="font-family:'Marcellus',serif;font-size:12px;color:var(--ink);opacity:0.35;margin:0 8px">·</span>
+      <span style="font-family:'Marcellus',serif;font-size:13px;color:var(--ink);opacity:0.55;letter-spacing:0.14em;text-transform:uppercase">Alice Machado Lima</span>
     </div>
     <span class="char-sub">Presente RJ · Vampiro</span>
     <div style="display:flex;align-items:center;gap:10px">
@@ -273,7 +282,7 @@ body{
       <div class="stat-pill"><div class="stat-val">7</div><div class="stat-lbl">Initiative (Dex 3 + Com 4)</div></div>
       <div class="stat-pill"><div class="stat-val">2/0</div><div class="stat-lbl">Armor (Iron Skin ••)</div></div>
     </div>
-    <div class="note note-ink" style="margin-top:8px;font-size:13px">
+    <div class="note note-ink" style="margin-top:8px;font-size:15px">
       <strong>Defensive Combat (Brawl):</strong> uses Brawl instead of Athletics to calculate Defense ·
       <strong style="color:var(--red)">No Depth Perception:</strong> −1 Dex in combat · −3 ranged (unless Aim first) ·
       <strong style="color:var(--orange)">Chronic Pain (Mild):</strong> −2 all skills when episode strikes
@@ -283,7 +292,7 @@ body{
   <div class="section">
     <div class="section-title">Vitae — <span id="blood-count">10</span>/10 &nbsp;<span style="font-size:10px;font-style:italic;color:var(--muted)">click to spend · click again to recover</span></div>
     <div class="dot-track" id="blood-track"></div>
-    <div class="note note-blood" style="margin-top:8px;font-size:13px">
+    <div class="note note-blood" style="margin-top:8px;font-size:15px">
       <strong>Wine Cabinet ••:</strong> 6 Blood Points per episode safely · <strong>Merge With Soil:</strong> can absorb spilled blood from the ground (diluted enough to prevent blood bond, but the taste may draw her out)
     </div>
   </div>
@@ -291,7 +300,7 @@ body{
   <div class="section">
     <div class="section-title">Willpower — <span id="will-count">7</span>/7 &nbsp;<span style="font-size:10px;font-style:italic;color:var(--muted)">click to spend · right-click to reset</span></div>
     <div class="dot-track" id="will-track"></div>
-    <div class="note note-ink" style="margin-top:8px;font-size:13px">
+    <div class="note note-ink" style="margin-top:8px;font-size:15px">
       Recover 1 WP: sleep one full day · <strong>Siris' Awakening:</strong> costs 1 WP · <strong>Chalice of the Overfull:</strong> costs 1 WP · <strong>Lingua Null:</strong> costs 1 WP
     </div>
   </div>
@@ -309,7 +318,7 @@ body{
         <div class="merit-dots" style="color:var(--green)">+1 die</div>
       </div>
       <div class="merit-row" style="padding:5px 0">
-        <div class="merit-body"><div class="merit-name">Larceny: Siris <em style="font-size:13px;color:var(--soft);font-weight:400">(Stolen Knack, Sanguine Thread)</em></div></div>
+        <div class="merit-body"><div class="merit-name">Larceny: Siris <em style="font-size:13px;color:var(--soft);font-weight:400">(Sanguine Thread)</em></div></div>
         <div class="merit-dots" style="color:var(--green)">+2 dice</div>
       </div>
       <div class="merit-row" style="padding:5px 0;border:none">
@@ -319,7 +328,7 @@ body{
     </div>
   </div>
 
-  <div class="brush-divider"></div>
+  <div class="brush-divider"><span>❦</span></div>
 
   <div class="section">
     <div class="section-title">Mask / Dirge</div>
@@ -341,7 +350,7 @@ body{
     </div>
   </div>
 
-  <div class="brush-divider"></div>
+  <div class="brush-divider"><span>❦</span></div>
 
   <div class="section">
     <div class="section-title">House Bane</div>
@@ -404,7 +413,7 @@ body{
         <div class="cost-row"><span class="cost-lbl">Dice Pool</span><span class="cost-val">None</span></div>
         <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Instant</span></div>
       </div>
-      <div class="gift-text">The vampire can absorb an object into her person — to conceal it, protect it, or otherwise keep it within her body. She can absorb objects up to one Size category beneath hers, two items two Size categories beneath her, four items three Size categories beneath her, and an immense but reasonable number of smaller objects at Storyteller discretion.</div>
+      <div class="gift-text dropcap">The vampire can absorb an object into her person — to conceal it, protect it, or otherwise keep it within her body. She can absorb objects up to one Size category beneath hers, two items two Size categories beneath her, four items three Size categories beneath her, and an immense but reasonable number of smaller objects at Storyteller discretion.</div>
       <div class="gift-extras">
         <div class="extra-item"><strong>Expelling</strong> an object is a reflexive action. It may come out of any part of her body. If forced into someone else, it counts as an attack: <em>Stamina + Survival + Loki's Guise</em>. Almost certainly grounds for a surprise attack if the victim didn't know about this power.</div>
       </div>
@@ -434,7 +443,7 @@ body{
         <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Scene</span></div>
       </div>
       <div class="gift-text">The vampire evokes a selection of bestial traits, enhancing her physical presence and abilities. Upon learning this gift, she selects <strong>three adaptations</strong> from the list below. By spending an additional point of blood, she can activate any or all of her chosen adaptations during the scene.</div>
-      <div class="note note-loki" style="font-size:12.5px;margin-bottom:10px">To change adaptations: spend one day merged with the earth and expend 1 Blood per adaptation replaced. Select Morgana's three below:</div>
+      <div class="note note-loki" style="font-size:14.5px;margin-bottom:10px">To change adaptations: spend one day merged with the earth and expend 1 Blood per adaptation replaced. Select Morgana's three below:</div>
       <div class="adapt-grid" id="adapt-grid"></div>
     </div>
 
@@ -450,7 +459,7 @@ body{
       <div class="gift-extras">
         <div class="extra-item"><strong>To add or replace a form:</strong> consume the appropriate beast, then slumber for a full day and night merged with the earth.</div>
       </div>
-      <div class="note note-loki" style="font-size:12.5px">Known forms: 🐕 Dog (Large) · 🦨 Weasel/Ferret · 🦇 Bat — see Animal Forms tab</div>
+      <div class="note note-loki" style="font-size:14.5px">Known forms: 🐕 Dog (Large) · 🦨 Weasel/Ferret · 🦇 Bat — see Animal Forms tab</div>
     </div>
 
     <!-- Merge With Soil -->
@@ -470,7 +479,7 @@ body{
     </div>
   </div>
 
-  <div class="brush-divider"></div>
+  <div class="brush-divider"><span>❦</span></div>
 
   <!-- ── SIRIS' GAMBIT ── -->
   <div class="section">
@@ -489,11 +498,11 @@ body{
 
     <div class="card ink" style="margin-bottom:4px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px">
-        <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--siris)">Psychic Vampirism — Raven Marks</div>
-        <div style="font-size:12px;color:var(--muted);font-style:italic">Minor Curse at 3 · escalates every +2</div>
+        <div style="font-family:'Marcellus',serif;font-size:13px;font-weight:700;color:var(--siris)">Psychic Vampirism — Raven Marks</div>
+        <div style="font-size:13px;color:var(--muted);font-style:italic">Minor Curse at 3 · escalates every +2</div>
       </div>
       <div class="raven-track" id="raven-track"></div>
-      <div class="note note-siris" style="margin-top:6px;font-size:12.5px">
+      <div class="note note-siris" style="margin-top:6px;font-size:14.5px">
         <strong>Minor Curse — Splitting Mind:</strong> At 3 Raven Marks with Mind powers this scene, a shearing headache spikes. Suffer <strong>−2 to resist supernatural powers</strong>.
       </div>
     </div>
@@ -508,7 +517,7 @@ body{
         <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Reflexive (any time)</span></div>
         <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Scene</span></div>
       </div>
-      <div class="gift-text">You flare your psychic channels. Gain <strong>+3 dice to all Gifts rolls</strong> for the scene — exactly as if you had spent Willpower on each of those rolls.</div>
+      <div class="gift-text dropcap">You flare your psychic channels. Gain <strong>+3 dice to all Gifts rolls</strong> for the scene — exactly as if you had spent Willpower on each of those rolls.</div>
       <div class="gift-extras">
         <div class="extra-item">Immediately take the <strong>Psychic Strain Tilt</strong> (throbbing migraine, nosebleed). While it lasts: <strong>−1 to Perception-based actions</strong> and <strong>−1 to Social dice pools</strong>. Ends at scene's end.</div>
       </div>
@@ -549,26 +558,9 @@ body{
         <div class="raven-risk-text">If you tug more total Blood than your Larceny score in a scene through this power, you immediately suffer <strong>−2 to all Physical actions</strong> for the remainder of the scene (blood shimmer nausea).</div>
       </div>
     </div>
-
-    <!-- Stolen Knack -->
-    <div class="card siris">
-      <div class="gift-name">Stolen Knack</div>
-      <div class="gift-flavor">"Every thought is a vein. Every soul leaks."</div>
-      <div class="cost-block">
-        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">1 Ichor</span></div>
-        <div class="cost-row"><span class="cost-lbl">Dice Pool</span><span class="cost-val">Composure + Larceny + Siris' Gambit vs. Resolve + Blood Potency</span></div>
-        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Instant</span></div>
-        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Scene</span></div>
-      </div>
-      <div class="gift-text">Choose one Skill or Personal Merit the target possesses. On success, copy up to <em>Larceny dots</em> of that Skill or Merit (not exceeding the target's rating) for the scene. The <strong>target loses that Skill or Merit for the scene</strong> as their knack "slips." You also copy one Specialty in that Skill.</div>
-      <div class="raven-risk">
-        <div class="raven-risk-label">⚠ Raven Risk</div>
-        <div class="raven-risk-text">Each time you use a stolen skill or merit, <strong>add 1 Raven Mark</strong>.</div>
-      </div>
-    </div>
   </div>
 
-  <div class="brush-divider"></div>
+  <div class="brush-divider"><span>❦</span></div>
 
   <!-- ── CIRCE'S CALL ── -->
   <div class="section">
@@ -587,7 +579,7 @@ body{
         <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Instant</span></div>
         <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Scene</span></div>
       </div>
-      <div class="gift-text">The vampire calls animals of a specific type (bats, rats, wolves, crows, etc.) from the surrounding area. Creatures within range respond and come to her. They are not compelled to act suicidally, but will obey orders within their natural capabilities — serving as scouts, distractions, or aid in simple tasks. The number and type of animals depends on the environment and the Storyteller's discretion.</div>
+      <div class="gift-text dropcap">The vampire calls animals of a specific type (bats, rats, wolves, crows, etc.) from the surrounding area. Creatures within range respond and come to her. They are not compelled to act suicidally, but will obey orders within their natural capabilities — serving as scouts, distractions, or aid in simple tasks. The number and type of animals depends on the environment and the Storyteller's discretion.</div>
     </div>
 
     <div class="card circe">
@@ -613,7 +605,7 @@ body{
         <div class="extra-item"><strong>Ending the link</strong> is reflexive. If the animal is killed or suffers serious harm while she is linked, she immediately snaps back to her own body and may be disoriented for a moment at ST discretion.</div>
         <div class="extra-item">Cannot be used simultaneously with Beast's Skin — she cannot be inside an animal while also being one.</div>
       </div>
-      <div class="note note-orange" style="font-size:12.5px">⚠ Description inferred from context — confirm mechanics with your ST. No dedicated Notion page found.</div>
+      <div class="note note-orange" style="font-size:14.5px">⚠ Description inferred from context — confirm mechanics with your ST. No dedicated Notion page found.</div>
     </div>
   </div>
 
@@ -629,7 +621,7 @@ body{
     <div class="section-title">Combat Merits</div>
     <div class="card blood">
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:4px">
-        <div style="font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--blood);letter-spacing:0.03em">Mobilize Outrage</div>
+        <div style="font-family:'Marcellus',serif;font-size:16px;font-weight:700;color:var(--blood);letter-spacing:0.03em">Mobilize Outrage</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
           <span class="tag tag-blood">Pre-Req: Brawl ••, Willpower 6</span>
           <span class="tag tag-red">•••••</span>
@@ -694,7 +686,7 @@ body{
     </div>
   </div>
 
-  <div class="brush-divider"></div>
+  <div class="brush-divider"><span>❦</span></div>
 
   <!-- UTILITY -->
   <div class="section">
@@ -770,7 +762,7 @@ body{
     </div>
   </div>
 
-  <div class="brush-divider"></div>
+  <div class="brush-divider"><span>❦</span></div>
 
   <!-- FLAWS -->
   <div class="section">
@@ -826,7 +818,7 @@ body{
 ══════════════════════════════════════════ -->
 <div class="content" id="forms">
 
-  <div class="note note-loki" style="margin-bottom:18px;font-size:13.5px">In animal form, Morgana uses the beast's Physical Attributes and Skills, including its Size, Speed, and Health. She can still use her Gifts normally. She may maintain a number of forms equal to her <strong>Survival</strong> rank. To learn a new form: consume the animal, then slumber one full day and night merged with the earth.</div>
+  <div class="note note-loki" style="margin-bottom:18px;font-size:15px">In animal form, Morgana uses the beast's Physical Attributes and Skills, including its Size, Speed, and Health. She can still use her Gifts normally. She may maintain a number of forms equal to her <strong>Survival</strong> rank. To learn a new form: consume the animal, then slumber one full day and night merged with the earth.</div>
 
   <!-- DOG -->
   <div class="form-block">
@@ -864,7 +856,7 @@ body{
     <div class="attr-text">Athletics 2 · Brawl 1 · Intimidation 1 · Stealth 4 · Survival 3</div>
     <div class="attack-row header"><div>Attack</div><div>Damage</div><div>Dice Pool</div></div>
     <div class="attack-row"><div>Bite</div><div style="text-align:center">+0</div><div class="attack-val">2</div></div>
-    <div class="note note-loki" style="margin-top:10px;font-size:12.5px">Morgana's most natural form — Stealth 4 and minimal size make this ideal for surveillance and infiltration.</div>
+    <div class="note note-loki" style="margin-top:10px;font-size:14.5px">Morgana's most natural form — Stealth 4 and minimal size make this ideal for surveillance and infiltration.</div>
   </div>
 
   <!-- BAT -->
@@ -884,7 +876,7 @@ body{
     <div class="attr-text">Athletics (Flight) 4 · Brawl 1 · Survival 3</div>
     <div class="attack-row header"><div>Attack</div><div>Damage</div><div>Dice Pool</div></div>
     <div class="attack-row"><div>Bite</div><div style="text-align:center">—</div><div class="attack-val">2</div></div>
-    <div class="note note-loki" style="margin-top:10px;font-size:12.5px"><strong>Special:</strong> Bats can see and maneuver in total darkness without penalty. Movement by flight only.</div>
+    <div class="note note-loki" style="margin-top:10px;font-size:14.5px"><strong>Special:</strong> Bats can see and maneuver in total darkness without penalty. Movement by flight only.</div>
   </div>
 
 </div>
@@ -1049,7 +1041,7 @@ function renderAdapt(){
     g.appendChild(div);
   });
   var status=document.createElement('div');
-  status.style.cssText='font-family:Cinzel,serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--loki);margin-top:10px;grid-column:1/-1;opacity:0.8';
+  status.style.cssText='font-family:Marcellus,serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--loki);margin-top:10px;grid-column:1/-1;opacity:0.8';
   status.textContent=state.adapt.length+' / 3 adaptations selected';
   g.appendChild(status);
 }
