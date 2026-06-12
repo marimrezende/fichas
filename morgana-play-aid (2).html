@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morgana — Play Aid</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ede5d4;
+  --surface:rgba(255,252,244,0.85);
+  --surface2:rgba(255,252,244,0.65);
+  --surface3:rgba(240,234,216,0.55);
+  --ink:#1c160a;
+  --gold:#2c2420;
+  --gold-dim:rgba(44,36,32,0.07);
+  --gold-border:rgba(44,36,32,0.2);
+  --loki:#2a5428;
+  --loki-dim:rgba(42,84,40,0.09);
+  --loki-border:rgba(42,84,40,0.3);
+  --siris:#4a1870;
+  --siris-dim:rgba(74,24,112,0.09);
+  --siris-border:rgba(74,24,112,0.3);
+  --circe:#7a4515;
+  --circe-dim:rgba(122,69,21,0.09);
+  --circe-border:rgba(122,69,21,0.3);
+  --blood:#7a1a1a;
+  --blood-dim:rgba(122,26,26,0.10);
+  --blood-border:rgba(122,26,26,0.3);
+  --text:#1c160a;
+  --soft:#6a5a3a;
+  --muted:#a89878;
+  --green:#1e6020;
+  --orange:#b06010;
+  --red:#8a1a1a;
+}
+body{
+  background:radial-gradient(circle at top left,rgba(60,40,20,.07),transparent 35%),radial-gradient(circle at bottom right,rgba(10,0,0,.06),transparent 40%),linear-gradient(to bottom,#ede0c8,#d8cdb5);
+  font-family:'EB Garamond',Georgia,serif;
+  font-size:16px;color:var(--text);min-height:100vh;padding:0
+}
+#paper-grain{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.app-header,.content-wrap{position:relative;z-index:10}
+.app-header{background:rgba(237,229,212,0.96);border-bottom:1px solid rgba(44,36,32,0.18);padding:14px 20px 0;display:flex;flex-direction:column;position:sticky;top:0;z-index:100}
+.header-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.char-name{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--ink);letter-spacing:0.04em}
+.char-sub{font-size:13px;color:var(--soft);font-style:italic}
+.rank-badge{font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;background:var(--blood-dim);border:1px solid var(--blood-border);color:var(--blood)}
+.save-status{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);opacity:0;transition:opacity .3s}
+.save-status.show{opacity:0.7}
+.reset-btn{font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;background:transparent;border:1px solid var(--gold-border);color:var(--soft);cursor:pointer;transition:all .15s;border-radius:2px}
+.reset-btn:hover{background:var(--blood-dim);border-color:var(--blood-border);color:var(--blood)}
+.tabs{display:flex;gap:0;border-top:1px solid rgba(44,36,32,0.12);overflow-x:auto}
+.tab{font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:10px 18px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:color .15s,border-color .15s;user-select:none;white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--ink)}
+.content-wrap{max-width:820px;margin:0 auto}
+.content{padding:20px;display:none}
+.content.active{display:block}
+.section{margin-bottom:22px}
+.section-title{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(44,36,32,0.15)}
+
+/* CARDS */
+.card{background:rgba(250,244,232,.72);border:1px solid rgba(40,20,10,.12);position:relative;overflow:hidden;padding:14px 16px}
+.card+.card{margin-top:8px}
+.card::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(70,50,30,.015) 0px,rgba(70,50,30,.015) 1px,transparent 1px,transparent 4px);opacity:.35;pointer-events:none;mix-blend-mode:multiply}
+.card>*{position:relative;z-index:1}
+.card.loki{border-left:3px solid var(--loki)}
+.card.siris{border-left:3px solid var(--siris)}
+.card.circe{border-left:3px solid var(--circe)}
+.card.blood{border-left:3px solid var(--blood)}
+.card.ink{border-left:3px solid var(--ink)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:540px){.grid2{grid-template-columns:1fr}}
+
+/* STATS */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:500px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+.stat-pill{background:var(--surface);border:1px solid rgba(44,36,32,0.1);padding:10px 8px;text-align:center}
+.stat-val{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--ink);line-height:1}
+.stat-lbl{font-size:10px;color:var(--soft);font-style:italic;margin-top:2px}
+
+/* DOTS */
+.dot-track{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.dot{width:22px;height:22px;border-radius:50%;background:var(--ink);border:2px solid var(--ink);cursor:pointer;transition:opacity .15s;flex-shrink:0}
+.dot.empty{background:transparent;opacity:0.22}
+.dot-blood{background:var(--blood);border-color:var(--blood)}
+.dot-blood.empty{background:transparent;border-color:var(--blood);opacity:0.3}
+.dot-hum{background:#2a5428;border-color:#2a5428}
+.dot-hum.empty{background:transparent;border-color:#2a5428;opacity:0.25}
+
+/* RAVEN MARKS */
+.raven-track{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;align-items:center}
+.raven-mark{width:18px;height:18px;border-radius:2px;background:var(--siris);border:2px solid var(--siris);cursor:pointer;transition:opacity .15s;flex-shrink:0}
+.raven-mark.empty{background:transparent;opacity:0.3}
+.raven-threshold{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--siris);opacity:0.6;padding:0 4px}
+
+/* TAGS */
+.tag{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:2px 7px;border:1px solid}
+.tag-loki{background:var(--loki-dim);color:var(--loki);border-color:var(--loki-border)}
+.tag-siris{background:var(--siris-dim);color:var(--siris);border-color:var(--siris-border)}
+.tag-circe{background:var(--circe-dim);color:var(--circe);border-color:var(--circe-border)}
+.tag-blood{background:var(--blood-dim);color:var(--blood);border-color:var(--blood-border)}
+.tag-ink{background:var(--gold-dim);color:var(--ink);border-color:var(--gold-border)}
+.tag-gray{background:rgba(0,0,0,0.04);color:var(--soft);border-color:rgba(0,0,0,0.1)}
+.tag-red{background:rgba(138,26,26,0.07);color:var(--red);border-color:rgba(138,26,26,0.3)}
+
+/* GIFT LAYOUT */
+.gift-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.gift-title-main{font-family:'Cinzel',serif;font-size:18px;font-weight:700;letter-spacing:0.04em}
+.gift-title-main.loki{color:var(--loki)}
+.gift-title-main.siris{color:var(--siris)}
+.gift-title-main.circe{color:var(--circe)}
+.gift-name{font-family:'Cinzel',serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;letter-spacing:0.02em}
+.gift-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.gift-flavor{font-size:14px;font-style:italic;color:var(--muted);margin-bottom:8px;line-height:1.5}
+.gift-text{font-size:14px;color:var(--text);line-height:1.75;margin-bottom:8px}
+.gift-extras{margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,0.07)}
+.extra-item{font-size:13px;color:var(--soft);line-height:1.6;padding:3px 0 3px 14px;position:relative}
+.extra-item::before{content:'·';position:absolute;left:0;color:var(--muted)}
+.extra-item strong{color:var(--text)}
+
+/* COST BLOCK */
+.cost-block{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:4px;margin-bottom:10px;background:var(--surface3);border:1px solid rgba(44,36,32,0.08);padding:8px 10px}
+.cost-row{font-size:13px;line-height:1.5}
+.cost-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);display:block}
+.cost-val{color:var(--text);font-weight:500}
+
+/* NOTES */
+.note{font-size:13px;line-height:1.55;padding:8px 12px;border-left:2px solid;margin-top:8px}
+.note-ink{border-color:var(--ink);background:var(--gold-dim);color:var(--ink)}
+.note-blood{border-color:var(--blood);background:var(--blood-dim);color:var(--blood)}
+.note-siris{border-color:var(--siris);background:var(--siris-dim);color:var(--siris)}
+.note-red{border-color:var(--red);background:rgba(138,26,26,0.07);color:var(--red)}
+.note-loki{border-color:var(--loki);background:var(--loki-dim);color:var(--loki)}
+.note-orange{border-color:var(--orange);background:rgba(176,96,16,0.07);color:var(--orange)}
+
+/* RAVEN RISK */
+.raven-risk{background:rgba(74,24,112,0.06);border:1px solid rgba(74,24,112,0.2);border-left:3px solid var(--siris);padding:8px 12px;margin-top:8px}
+.raven-risk-label{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--siris);margin-bottom:3px}
+.raven-risk-text{font-size:13px;color:var(--siris);line-height:1.55}
+
+/* BRANCH BOX */
+.branch-box{background:var(--siris-dim);border:1px solid var(--siris-border);padding:10px 14px;margin:10px 0;font-size:13.5px;color:var(--siris);line-height:1.65}
+
+/* BANE CARD */
+.bane-card{background:rgba(20,5,5,0.92);border:1px solid rgba(122,26,26,0.4);border-left:3px solid var(--blood);padding:18px 20px;position:relative;overflow:hidden}
+.bane-card::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(122,26,26,.025) 0px,rgba(122,26,26,.025) 1px,transparent 1px,transparent 4px);pointer-events:none}
+.bane-eyebrow{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--blood);margin-bottom:6px;opacity:0.8}
+.bane-title{font-family:'Cinzel',serif;font-size:17px;font-weight:700;color:#e8cece;letter-spacing:0.04em;margin-bottom:2px}
+.bane-subtitle{font-size:12px;color:rgba(200,160,160,0.7);font-style:italic;margin-bottom:14px}
+.bane-divider{width:100%;height:1px;background:linear-gradient(90deg,rgba(122,26,26,0.5),transparent);margin-bottom:14px}
+.bane-sub{margin-bottom:14px}
+.bane-sub-label{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(200,140,140,0.7);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.bane-sub-label::after{content:'';flex:1;height:1px;background:rgba(122,26,26,0.3)}
+.bane-sub-text{font-size:14px;color:rgba(220,190,190,0.85);line-height:1.75}
+.bane-example{font-size:13px;color:rgba(180,140,140,0.75);font-style:italic;padding:4px 0 4px 12px;border-left:1px solid rgba(122,26,26,0.3);margin-top:4px}
+.bane-trigger{display:inline-flex;align-items:center;gap:6px;font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;background:rgba(122,26,26,0.2);border:1px solid rgba(122,26,26,0.3);color:rgba(200,140,140,0.9);margin:3px 3px 3px 0}
+
+/* MASK DIRGE */
+.md-card{background:var(--surface);border:1px solid rgba(44,36,32,0.1);padding:14px 16px}
+.md-label{font-family:'Cinzel',serif;font-size:8px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.md-name{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.md-text{font-size:13.5px;color:var(--soft);line-height:1.65}
+.md-quest{font-size:12px;color:var(--green);margin-top:8px;padding:4px 8px;background:rgba(30,96,32,0.06);border-left:2px solid var(--green);font-style:italic}
+.md-ban{font-size:12px;color:var(--red);margin-top:4px;padding:4px 8px;background:rgba(138,26,26,0.05);border-left:2px solid var(--red);font-style:italic}
+
+/* MERITS */
+.merit-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05)}
+.merit-row:last-child{border-bottom:none}
+.merit-body{flex:1}
+.merit-name{font-size:14.5px;color:var(--text);font-weight:500;margin-bottom:3px}
+.merit-prereq{font-size:11px;color:var(--muted);font-family:'Cinzel',serif;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:5px}
+.merit-dots{font-family:'Cinzel',serif;font-size:13px;color:var(--muted);white-space:nowrap;letter-spacing:0.04em;flex-shrink:0;padding-top:2px}
+.merit-desc{font-size:13.5px;color:var(--soft);line-height:1.65}
+.merit-mech{font-size:13px;color:var(--ink);background:rgba(44,36,32,0.05);border-left:2px solid rgba(44,36,32,0.2);padding:4px 10px;margin-top:6px;line-height:1.6}
+
+/* MOBILIZE */
+.mo-step{display:grid;grid-template-columns:36px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid rgba(122,26,26,0.08)}
+.mo-step:last-child{border-bottom:none}
+.mo-num{width:36px;height:36px;border-radius:50%;background:rgba(122,26,26,0.08);border:1.5px solid rgba(122,26,26,0.3);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--blood);flex-shrink:0;align-self:start;margin-top:1px}
+.mo-title{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--blood);margin-bottom:4px;letter-spacing:0.04em}
+.mo-body{font-size:13.5px;color:var(--soft);line-height:1.65}
+
+/* FLAWS */
+.flaw-card{background:rgba(122,26,26,0.04);border:1px solid rgba(122,26,26,0.15);border-left:3px solid var(--blood);padding:13px 15px;margin-top:8px}
+.flaw-header{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px}
+.flaw-name{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--blood);letter-spacing:0.02em}
+.flaw-pts{font-family:'Cinzel',serif;font-size:10px;color:rgba(122,26,26,0.6);letter-spacing:0.08em;text-transform:uppercase}
+.flaw-text{font-size:13.5px;color:var(--soft);line-height:1.7}
+.flaw-mech{font-size:13px;color:var(--red);background:rgba(122,26,26,0.06);border-left:2px solid rgba(122,26,26,0.3);padding:4px 10px;margin-top:6px;line-height:1.6}
+
+/* ADAPTATIONS */
+.adapt-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+@media(max-width:480px){.adapt-grid{grid-template-columns:1fr}}
+.adapt-item{background:var(--surface3);border:1px solid rgba(42,84,40,0.12);padding:8px 10px;display:flex;gap:8px;align-items:flex-start;cursor:pointer;user-select:none;transition:background .15s}
+.adapt-item:hover{background:var(--loki-dim)}
+.adapt-item.chosen{background:var(--loki-dim);border-color:var(--loki-border)}
+.adapt-item.locked{opacity:0.4;cursor:default}
+.adapt-check{width:14px;height:14px;border:1.5px solid var(--loki);flex-shrink:0;margin-top:2px;position:relative;transition:background .15s}
+.adapt-item.chosen .adapt-check{background:var(--loki)}
+.adapt-item.chosen .adapt-check::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700}
+.adapt-name{font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--loki);letter-spacing:0.04em;margin-bottom:3px}
+.adapt-desc{font-size:12px;color:var(--soft);line-height:1.45}
+
+/* ANIMAL FORMS */
+.form-block{background:var(--surface);border:1px solid rgba(44,36,32,0.12);padding:16px;margin-bottom:12px}
+.form-name{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--loki);margin-bottom:12px;letter-spacing:0.03em}
+.form-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+@media(max-width:480px){.form-stat-grid{grid-template-columns:repeat(2,1fr)}}
+.form-stat{background:var(--loki-dim);border:1px solid var(--loki-border);padding:6px 8px;text-align:center}
+.form-stat-val{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--loki);line-height:1}
+.form-stat-lbl{font-size:9px;color:var(--loki);letter-spacing:0.06em;text-transform:uppercase;opacity:0.75;margin-top:1px}
+.attr-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px;font-weight:600}
+.attr-text{font-size:13px;color:var(--soft);line-height:1.6;margin-bottom:10px}
+.attack-row{display:grid;grid-template-columns:1fr auto auto;gap:8px;font-size:13px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.05);align-items:center}
+.attack-row.header{font-family:'Cinzel',serif;font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);border-bottom:1px solid rgba(44,36,32,0.15)}
+.attack-val{text-align:center;font-family:'Cinzel',serif;font-weight:600;font-size:14px;color:var(--loki)}
+
+/* DIVIDER */
+.brush-divider{height:28px;margin:22px 0;background:linear-gradient(90deg,transparent,rgba(0,0,0,.12),rgba(0,0,0,.08),transparent);opacity:.5;clip-path:polygon(0 45%,9% 38%,20% 52%,35% 44%,52% 58%,70% 40%,88% 55%,100% 48%,100% 65%,0 58%)}
+
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(44,36,32,0.2);border-radius:3px}
+</style>
+</head>
+<body>
+
+<svg id="paper-grain" aria-hidden="true">
+  <defs><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.68 0.52" numOctaves="4" seed="12" stitchTiles="stitch" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.38  0 0 0 0 0.26  0 0 0 0 0.1  0 0 0 0.055 0"/></filter></defs>
+  <rect width="100%" height="100%" filter="url(#grain)"/>
+</svg>
+
+<div class="app-header">
+  <div class="header-top">
+    <div>
+      <span class="char-name">🦨 Morgana</span>
+      <span style="font-family:'Cinzel',serif;font-size:12px;color:var(--ink);opacity:0.35;margin:0 8px">·</span>
+      <span style="font-family:'Cinzel',serif;font-size:12px;color:var(--ink);opacity:0.55;letter-spacing:0.14em;text-transform:uppercase">Alice Machado Lima</span>
+    </div>
+    <span class="char-sub">Morrigan · Dreadford/VtR Homebrew</span>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="rank-badge">Bloodling · BP 1</span>
+      <span id="save-status" class="save-status">saved</span>
+      <button class="reset-btn" onclick="resetTrackers()" title="Reset all trackers to full">⟲ Reset</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('summary',this)">Summary</div>
+    <div class="tab" onclick="showTab('gifts',this)">Gifts</div>
+    <div class="tab" onclick="showTab('merits',this)">Merits &amp; Flaws</div>
+    <div class="tab" onclick="showTab('forms',this)">Animal Forms</div>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+<!-- ══════════════════════════════════════════
+     SUMMARY
+══════════════════════════════════════════ -->
+<div class="content active" id="summary">
+
+  <div class="section">
+    <div class="section-title">Core Stats</div>
+    <div class="stat-grid">
+      <div class="stat-pill"><div class="stat-val">9</div><div class="stat-lbl">Health (Sta 4 + 5)</div></div>
+      <div class="stat-pill"><div class="stat-val">7</div><div class="stat-lbl">Willpower (Res 3 + Com 4)</div></div>
+      <div class="stat-pill"><div class="stat-val">9</div><div class="stat-lbl">Speed (1+3+5)</div></div>
+      <div class="stat-pill"><div class="stat-val">6</div><div class="stat-lbl">Defense (Brawl 3 + lower 3)</div></div>
+      <div class="stat-pill"><div class="stat-val">7</div><div class="stat-lbl">Initiative (Dex 3 + Com 4)</div></div>
+      <div class="stat-pill"><div class="stat-val">2/0</div><div class="stat-lbl">Armor (Iron Skin ••)</div></div>
+    </div>
+    <div class="note note-ink" style="margin-top:8px;font-size:13px">
+      <strong>Defensive Combat (Brawl):</strong> uses Brawl instead of Athletics to calculate Defense ·
+      <strong style="color:var(--red)">No Depth Perception:</strong> −1 Dex in combat · −3 ranged (unless Aim first) ·
+      <strong style="color:var(--orange)">Chronic Pain (Mild):</strong> −2 all skills when episode strikes
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Vitae — <span id="blood-count">10</span>/10 &nbsp;<span style="font-size:10px;font-style:italic;color:var(--muted)">click to spend · click again to recover</span></div>
+    <div class="dot-track" id="blood-track"></div>
+    <div class="note note-blood" style="margin-top:8px;font-size:13px">
+      <strong>Wine Cabinet ••:</strong> 6 Blood Points per episode safely · <strong>Merge With Soil:</strong> can absorb spilled blood from the ground (diluted enough to prevent blood bond, but the taste may draw her out)
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Willpower — <span id="will-count">7</span>/7 &nbsp;<span style="font-size:10px;font-style:italic;color:var(--muted)">click to spend · right-click to reset</span></div>
+    <div class="dot-track" id="will-track"></div>
+    <div class="note note-ink" style="margin-top:8px;font-size:13px">
+      Recover 1 WP: sleep one full day · <strong>Siris' Awakening:</strong> costs 1 WP · <strong>Chalice of the Overfull:</strong> costs 1 WP · <strong>Lingua Null:</strong> costs 1 WP
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Humanity — <span id="hum-count">8</span>/10</div>
+    <div class="dot-track" id="hum-track"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Specializations</div>
+    <div class="card ink">
+      <div class="merit-row" style="padding:5px 0">
+        <div class="merit-body"><div class="merit-name">Survival: Hunt</div></div>
+        <div class="merit-dots" style="color:var(--green)">+1 die</div>
+      </div>
+      <div class="merit-row" style="padding:5px 0">
+        <div class="merit-body"><div class="merit-name">Larceny: Siris <em style="font-size:13px;color:var(--soft);font-weight:400">(Stolen Knack, Sanguine Thread)</em></div></div>
+        <div class="merit-dots" style="color:var(--green)">+2 dice</div>
+      </div>
+      <div class="merit-row" style="padding:5px 0;border:none">
+        <div class="merit-body"><div class="merit-name">Brawl: Grapple</div></div>
+        <div class="merit-dots" style="color:var(--green)">+2 dice</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="brush-divider"></div>
+
+  <div class="section">
+    <div class="section-title">Mask / Dirge</div>
+    <div class="grid2">
+      <div class="md-card">
+        <div class="md-label">Mask</div>
+        <div class="md-name">Conformist</div>
+        <div class="md-text">You are a follower. It is easy for you to adapt, comply, and reconcile yourself to whatever new situation you find yourself in. You flit to the brightest star, throwing your lot in with the person you feel to be the best. It is both difficult and distasteful to go against the flow or rebel. You hate inconsistency and instability, and know that by supporting a strong leader, you help prevent chaos.</div>
+        <div class="md-quest">♦ Regain Willpower whenever your group (the brood) accomplishes something because of your support and aid.</div>
+        <div class="md-ban">✗ Never go against the flow or against the pack.</div>
+      </div>
+      <div class="md-card">
+        <div class="md-label">Dirge</div>
+        <div class="md-name">Stoic</div>
+        <div class="md-text">You take the unavoidable sorrows (and joys) of life in stride. You have a calm and serious mind, and rarely give into unseemly displays of emotion. This does not mean that you do not have feelings — you just do not wear them on your sleeve. The most people will ever get out of you is a slight smile or a small frown.</div>
+        <div class="md-quest">♦ Regain Willpower every time you come through an emotionally charged situation with your composure intact.</div>
+        <div class="md-ban">✗ Never let your emotions get the better of you.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="brush-divider"></div>
+
+  <div class="section">
+    <div class="section-title">House Bane</div>
+    <div class="bane-card">
+      <div class="bane-eyebrow">The Raven's Fracture</div>
+      <div class="bane-title">Morgana's mind is no longer linear.</div>
+      <div class="bane-subtitle">Memory and perception fracture under pressure.</div>
+      <div class="bane-divider"></div>
+      <div class="bane-sub">
+        <div class="bane-sub-label">False Certainties</div>
+        <div class="bane-sub-text">She remembers things with <em>absolute confidence</em> — that are wrong.</div>
+        <div style="display:flex;flex-direction:column;gap:4px;margin-top:8px">
+          <div class="bane-example">"Amanda told me to do this." — she didn't.</div>
+          <div class="bane-example">"This person is dangerous." — they're not.</div>
+          <div class="bane-example">"I've been here before." — she hasn't.</div>
+        </div>
+      </div>
+      <div class="bane-sub">
+        <div class="bane-sub-label">Reality Dropout</div>
+        <div class="bane-sub-text">She blinks — three seconds gone. She hears something — it already happened. She's mid-action — she already finished.</div>
+      </div>
+      <div class="bane-sub">
+        <div class="bane-sub-label">Triggers</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">
+          <div class="bane-trigger">Siris' Gambit use</div>
+          <div class="bane-trigger">Emotional stress</div>
+          <div class="bane-trigger">Decision based on perception / memory</div>
+          <div class="bane-trigger">Important information at stake</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(122,26,26,0.2)">
+        <div class="bane-sub-label">Scene Condition</div>
+        <div class="bane-sub-text" style="font-size:13px">The ST may open a scene with a Condition tied to the Bane — resolved by the character (losing time, exiting reality) or sent as false information contaminating her memory. The Condition renews on heavy Siris' Gambit use or after dramatic events.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════
+     GIFTS
+══════════════════════════════════════════ -->
+<div class="content" id="gifts">
+
+  <!-- ── LOKI'S GUISE ── -->
+  <div class="section">
+    <div class="gift-header">
+      <div class="gift-title-main loki">Loki's Guise ••</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span class="tag tag-loki">Shapeshifting</span>
+        <span class="tag tag-gray">Bloodling Rank</span>
+      </div>
+    </div>
+
+    <!-- Hidden Arsenal -->
+    <div class="card loki">
+      <div class="gift-name">Hidden Arsenal <span style="font-weight:400;font-style:italic;font-size:13px;color:var(--soft)">(Holdout)</span></div>
+      <div class="cost-block">
+        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">1 Blood per Size of object</span></div>
+        <div class="cost-row"><span class="cost-lbl">Dice Pool</span><span class="cost-val">None</span></div>
+        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Instant</span></div>
+      </div>
+      <div class="gift-text">The vampire can absorb an object into her person — to conceal it, protect it, or otherwise keep it within her body. She can absorb objects up to one Size category beneath hers, two items two Size categories beneath her, four items three Size categories beneath her, and an immense but reasonable number of smaller objects at Storyteller discretion.</div>
+      <div class="gift-extras">
+        <div class="extra-item"><strong>Expelling</strong> an object is a reflexive action. It may come out of any part of her body. If forced into someone else, it counts as an attack: <em>Stamina + Survival + Loki's Guise</em>. Almost certainly grounds for a surprise attack if the victim didn't know about this power.</div>
+      </div>
+    </div>
+
+    <!-- Chalice of the Overfull -->
+    <div class="card loki">
+      <div class="gift-name">Chalice of the Overfull <span style="font-weight:400;font-style:italic;font-size:13px;color:var(--soft)">(Blood Bloat)</span></div>
+      <div class="cost-block">
+        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">1 Willpower</span></div>
+        <div class="cost-row"><span class="cost-lbl">Dice Pool</span><span class="cost-val">No roll required</span></div>
+        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Reflexive</span></div>
+      </div>
+      <div class="gift-text">Allows the vampire to store more Blood Points in her body than it can normally hold. She must be at maximum capacity to activate it. Once active, she can hold a number of extra Blood Points equal to her score in Survival.</div>
+      <div class="gift-extras">
+        <div class="extra-item"><strong>1 Bashing damage and −1 Speed</strong> for each two BP held above the standard maximum. These Health points cannot be healed while she exceeds her normal capacity.</div>
+        <div class="extra-item"><strong>Visually:</strong> veins and arteries bulge unnaturally. Mortal viewers will likely assume some hideous disfiguring disease — Storytellers may assess Social roll penalties accordingly.</div>
+      </div>
+    </div>
+
+    <!-- Predatory Aspect -->
+    <div class="card loki">
+      <div class="gift-name">Predatory Aspect</div>
+      <div class="cost-block">
+        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">1 Blood (activate) + 1 Blood per adaptation</span></div>
+        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Reflexive</span></div>
+        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Scene</span></div>
+      </div>
+      <div class="gift-text">The vampire evokes a selection of bestial traits, enhancing her physical presence and abilities. Upon learning this gift, she selects <strong>three adaptations</strong> from the list below. By spending an additional point of blood, she can activate any or all of her chosen adaptations during the scene.</div>
+      <div class="note note-loki" style="font-size:12.5px;margin-bottom:10px">To change adaptations: spend one day merged with the earth and expend 1 Blood per adaptation replaced. Select Morgana's three below:</div>
+      <div class="adapt-grid" id="adapt-grid"></div>
+    </div>
+
+    <!-- Beast's Skin -->
+    <div class="card loki">
+      <div class="gift-name">Beast's Skin</div>
+      <div class="cost-block">
+        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">2 Blood</span></div>
+        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Instant</span></div>
+        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Indefinite</span></div>
+      </div>
+      <div class="gift-text">The vampire transforms into an animal she has previously consumed. The selected form must fall within Size 1–7. She can maintain a number of forms equal to her rank in Survival. In animal form, she adopts the beast's Physical Attributes and Skills, including its Size, Speed, and Health — she can move, sense, and attack in any way characteristic of the animal. She can still use her Gifts normally while transformed. She may be unable to use certain Physical Merits in this form.</div>
+      <div class="gift-extras">
+        <div class="extra-item"><strong>To add or replace a form:</strong> consume the appropriate beast, then slumber for a full day and night merged with the earth.</div>
+      </div>
+      <div class="note note-loki" style="font-size:12.5px">Known forms: 🐕 Dog (Large) · 🦨 Weasel/Ferret · 🦇 Bat — see Animal Forms tab</div>
+    </div>
+
+    <!-- Merge With Soil -->
+    <div class="card loki">
+      <div class="gift-name">Merge With Soil</div>
+      <div class="cost-block">
+        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">0 Blood (soil/earth) or Blood = Durability of material</span></div>
+        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Instant</span></div>
+        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Indefinite</span></div>
+      </div>
+      <div class="gift-text">The vampire sinks bodily into the earth for as long as she desires. Once interred, she is mostly insensible to the outside world, though she can remain conscious. She has a sense of the ground above her — she is aware if someone tries to concrete over her hiding place.</div>
+      <div class="gift-extras">
+        <div class="extra-item"><strong>Vampire senses</strong> continue to function. Another vampire's predatory aura cannot force her into fight-or-flight while she is safely interred.</div>
+        <div class="extra-item"><strong>Blood absorption:</strong> if blood is spilled on the ground above her, she can absorb it. The soil dilutes Blood Point enough to prevent blood bond — but the taste might be enough to drive her out, thirsty for more.</div>
+        <div class="extra-item"><strong>Damage:</strong> 1 Bashing per point of Structure her haven loses. On the first point of Lethal damage, she emerges involuntarily.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="brush-divider"></div>
+
+  <!-- ── SIRIS' GAMBIT ── -->
+  <div class="section">
+    <div class="gift-header">
+      <div class="gift-title-main siris">Siris' Gambit ••</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span class="tag tag-siris">Psychic Mind</span>
+        <span class="tag tag-gray">Psychic Vampirism Branch</span>
+      </div>
+    </div>
+
+    <div class="branch-box">
+      <em>"Every gift the Raven offers comes with a price. You may take its wing, but its shadow will never leave you."</em><br><br>
+      <strong>Raven Track:</strong> Each time you activate any Siris' Gambit power, mark 1 Raven Mark for the relevant branch used. At <strong>3 marks in a branch during a scene</strong>, you suffer that branch's Minor Curse. Every <strong>+2 marks</strong> after that in the same scene, the Minor Curse intensifies one step.
+    </div>
+
+    <div class="card ink" style="margin-bottom:4px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px">
+        <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--siris)">Psychic Vampirism — Raven Marks</div>
+        <div style="font-size:12px;color:var(--muted);font-style:italic">Minor Curse at 3 · escalates every +2</div>
+      </div>
+      <div class="raven-track" id="raven-track"></div>
+      <div class="note note-siris" style="margin-top:6px;font-size:12.5px">
+        <strong>Minor Curse — Splitting Mind:</strong> At 3 Raven Marks with Mind powers this scene, a shearing headache spikes. Suffer <strong>−2 to resist supernatural powers</strong>.
+      </div>
+    </div>
+
+    <!-- Siris' Awakening -->
+    <div class="card siris">
+      <div class="gift-name">Siris' Awakening <span style="font-weight:400;font-style:italic;font-size:13px;color:var(--soft)">(Base Power — No Branch)</span></div>
+      <div class="gift-flavor">"The nosebleed. The whisper. The world goes very, very sharp."</div>
+      <div class="cost-block">
+        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">1 Willpower</span></div>
+        <div class="cost-row"><span class="cost-lbl">Dice Pool</span><span class="cost-val">None</span></div>
+        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Reflexive (any time)</span></div>
+        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Scene</span></div>
+      </div>
+      <div class="gift-text">You flare your psychic channels. Gain <strong>+3 dice to all Gifts rolls</strong> for the scene — exactly as if you had spent Willpower on each of those rolls.</div>
+      <div class="gift-extras">
+        <div class="extra-item">Immediately take the <strong>Psychic Strain Tilt</strong> (throbbing migraine, nosebleed). While it lasts: <strong>−1 to Perception-based actions</strong> and <strong>−1 to Social dice pools</strong>. Ends at scene's end.</div>
+      </div>
+    </div>
+
+    <!-- Psychic Mind -->
+    <div class="card siris">
+      <div class="gift-name">Psychic Mind <span style="font-weight:400;font-style:italic;font-size:13px;color:var(--soft)">(Branch Base)</span></div>
+      <div class="cost-block">
+        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">Free while Awakening active · otherwise 1 Blood</span></div>
+        <div class="cost-row"><span class="cost-lbl">Dice Pool</span><span class="cost-val">None</span></div>
+        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Reflexive</span></div>
+        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Scene</span></div>
+      </div>
+      <div class="gift-text"><strong>Silent Link:</strong> Create a two-way mental channel with one willing or unresisting target you can see, within <em>Socialize + Larceny × 10 meters</em>. Exchange words and images instantly. You may maintain links equal to your total Socialize + Larceny ranks.</div>
+      <div class="gift-extras">
+        <div class="extra-item"><strong>Lingua Null (1/scene):</strong> Spend 1 Willpower — for the rest of the scene, you and all linked targets understand each other perfectly regardless of language. The link does not break out of line of sight while within range.</div>
+      </div>
+    </div>
+
+    <!-- Sanguine Thread -->
+    <div class="card siris">
+      <div class="gift-name">Sanguine Thread</div>
+      <div class="gift-flavor">"A hair-thin psychic filament latches to a vein."</div>
+      <div class="cost-block">
+        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">1 Ichor</span></div>
+        <div class="cost-row"><span class="cost-lbl">Dice Pool</span><span class="cost-val">Composure + Larceny + Siris' Gambit vs. Stamina + Blood Potency</span></div>
+        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Instant</span></div>
+        <div class="cost-row"><span class="cost-lbl">Range</span><span class="cost-val">10 m × Larceny</span></div>
+        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Scene</span></div>
+      </div>
+      <div class="gift-text">On success, immediately draw <strong>1 Blood Point</strong> from the target into your pool (mortals take 1 Lethal instead). While the Thread endures, you may <strong>tug once per turn (Reflexive, no roll)</strong> to siphon 1 more BP (or 1 Lethal from mortals). The Thread breaks if the target leaves range or you dismiss it.</div>
+      <div class="gift-extras">
+        <div class="extra-item">If the target is a vampire, you sense their <strong>current Blood Pool</strong> and whenever they spend blood this scene.</div>
+      </div>
+      <div class="raven-risk">
+        <div class="raven-risk-label">⚠ Raven Risk</div>
+        <div class="raven-risk-text">If you tug more total Blood than your Larceny score in a scene through this power, you immediately suffer <strong>−2 to all Physical actions</strong> for the remainder of the scene (blood shimmer nausea).</div>
+      </div>
+    </div>
+
+    <!-- Stolen Knack -->
+    <div class="card siris">
+      <div class="gift-name">Stolen Knack</div>
+      <div class="gift-flavor">"Every thought is a vein. Every soul leaks."</div>
+      <div class="cost-block">
+        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">1 Ichor</span></div>
+        <div class="cost-row"><span class="cost-lbl">Dice Pool</span><span class="cost-val">Composure + Larceny + Siris' Gambit vs. Resolve + Blood Potency</span></div>
+        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Instant</span></div>
+        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Scene</span></div>
+      </div>
+      <div class="gift-text">Choose one Skill or Personal Merit the target possesses. On success, copy up to <em>Larceny dots</em> of that Skill or Merit (not exceeding the target's rating) for the scene. The <strong>target loses that Skill or Merit for the scene</strong> as their knack "slips." You also copy one Specialty in that Skill.</div>
+      <div class="raven-risk">
+        <div class="raven-risk-label">⚠ Raven Risk</div>
+        <div class="raven-risk-text">Each time you use a stolen skill or merit, <strong>add 1 Raven Mark</strong>.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="brush-divider"></div>
+
+  <!-- ── CIRCE'S CALL ── -->
+  <div class="section">
+    <div class="gift-header">
+      <div class="gift-title-main circe">Circe's Call •</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span class="tag tag-circe">Animalism</span>
+        <span class="tag tag-gray">Bloodling Rank</span>
+      </div>
+    </div>
+
+    <div class="card circe">
+      <div class="gift-name">Child of the Night</div>
+      <div class="cost-block">
+        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">—</span></div>
+        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Instant</span></div>
+        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Scene</span></div>
+      </div>
+      <div class="gift-text">The vampire calls animals of a specific type (bats, rats, wolves, crows, etc.) from the surrounding area. Creatures within range respond and come to her. They are not compelled to act suicidally, but will obey orders within their natural capabilities — serving as scouts, distractions, or aid in simple tasks. The number and type of animals depends on the environment and the Storyteller's discretion.</div>
+    </div>
+
+    <div class="card circe">
+      <div class="gift-name">Beast Speech</div>
+      <div class="cost-block">
+        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">—</span></div>
+        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Reflexive</span></div>
+        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Scene</span></div>
+      </div>
+      <div class="gift-text">Morgana communicates with animals of any kind — understanding their intentions, simple emotions, and basic thoughts, and conveying simple messages back. Communication is intuitive rather than linguistic: more sensation and image than words. Does not guarantee cooperation — only communication. Especially effective with animals she knows well (the horses at the stable, animals she has taken the form of).</div>
+    </div>
+
+    <div class="card circe">
+      <div class="gift-name">Bird in Ear</div>
+      <div class="cost-block">
+        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">—</span></div>
+        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Instant</span></div>
+        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Concentration</span></div>
+      </div>
+      <div class="gift-text">The vampire pushes her consciousness into an animal she can see and perceives the world through its senses — sight, hearing, smell — as if she were the creature herself. While inhabiting the animal's perspective, her own body remains still and unresponsive. She can guide the animal toward targets of interest but cannot make it act against its nature.</div>
+      <div class="gift-extras">
+        <div class="extra-item">Works especially well with birds and bats — silent scouts with high vantage points and keen senses.</div>
+        <div class="extra-item"><strong>Ending the link</strong> is reflexive. If the animal is killed or suffers serious harm while she is linked, she immediately snaps back to her own body and may be disoriented for a moment at ST discretion.</div>
+        <div class="extra-item">Cannot be used simultaneously with Beast's Skin — she cannot be inside an animal while also being one.</div>
+      </div>
+      <div class="note note-orange" style="font-size:12.5px">⚠ Description inferred from context — confirm mechanics with your ST. No dedicated Notion page found.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════
+     MERITS & FLAWS
+══════════════════════════════════════════ -->
+<div class="content" id="merits">
+
+  <!-- MOBILIZE OUTRAGE -->
+  <div class="section">
+    <div class="section-title">Combat Merits</div>
+    <div class="card blood">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:4px">
+        <div style="font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--blood);letter-spacing:0.03em">Mobilize Outrage</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span class="tag tag-blood">Pre-Req: Brawl ••, Willpower 6</span>
+          <span class="tag tag-red">•••••</span>
+        </div>
+      </div>
+      <div style="font-size:14px;font-style:italic;color:var(--soft);margin-bottom:12px;line-height:1.6">Your character has the hands of a revolutionary. She fights with the passion of the oppressed. She breaks skulls the way a slave breaks his bondage.</div>
+      <div class="mo-step">
+        <div class="mo-num">1</div>
+        <div><div class="mo-title">Bring Them Down</div><div class="mo-body">You always count your opponent's Defense as <strong>1 lower</strong> than it is when attacking in melee. Also your attacks count as <strong>two attacks</strong> to penalize Defense.</div></div>
+      </div>
+      <div class="mo-step">
+        <div class="mo-num">2</div>
+        <div><div class="mo-title">Strike to Preempt</div><div class="mo-body">When spending Willpower on an attack, add her <strong>Willpower dots</strong> to the attack roll instead of the normal +3. She <strong>loses her Defense</strong>.</div></div>
+      </div>
+      <div class="mo-step">
+        <div class="mo-num">3</div>
+        <div><div class="mo-title">Unbreakable</div><div class="mo-body">When resisting Mental or Social coercion — including Disciplines — spending Willpower adds her <strong>Willpower dots</strong> to a contested roll, or subtracts from the opponent's roll on a resisted roll (instead of the normal +3 or −2). Only usable when actively engaged in combat, or initiating combat next turn. May spend a second Willpower in the same turn to activate Unbreakable after activating Strike to Preempt.</div></div>
+      </div>
+      <div class="mo-step">
+        <div class="mo-num">4</div>
+        <div><div class="mo-title">Dying On Your Feet</div><div class="mo-body">Remains standing and fighting long after most vampires would fall. While in combat: <strong>no wound penalties</strong>, and <strong>not subject to torpor</strong> when Health boxes are full of lethal damage. Only aggravated damage — and Final Death — may stop her. At the end of the combat scene, she falls into torpor if her Health boxes are still full of lethal.</div></div>
+      </div>
+      <div class="mo-step" style="border:none">
+        <div class="mo-num">5</div>
+        <div><div class="mo-title">Destroy Defense</div><div class="mo-body">Each successful hit <strong>reduces the target's Defense by 1</strong>, cumulatively across successive attacks — up to a maximum equal to the lower of Morgana's Wits or Dexterity. Usable across multiple rounds as long as she does nothing except deliver successful attacks. <strong>Resets to 0</strong> on a miss or any other action. Cumulative with the normal Defense penalty against multiple attacks.</div></div>
+      </div>
+    </div>
+
+    <div class="card ink" style="margin-top:10px">
+      <div class="merit-row">
+        <div class="merit-body">
+          <div class="merit-name">Defensive Combat <em style="font-size:13px;font-weight:400;color:var(--soft)">(Brawl)</em></div>
+          <div class="merit-prereq">Pre-Req: Brawl •</div>
+          <div class="merit-desc">Your character is trained in avoiding damage in combat. Use her <strong>Brawl</strong> to calculate Defense, rather than Athletics. She can learn both versions of this Merit, allowing her to use any of the three Skills to calculate Defense. She cannot use Weaponry for Defense unless she has a weapon in hand.</div>
+        </div>
+        <div class="merit-dots">•</div>
+      </div>
+      <div class="merit-row">
+        <div class="merit-body">
+          <div class="merit-name">Fighting Finesse <em style="font-size:13px;font-weight:400;color:var(--soft)">(Brawl)</em></div>
+          <div class="merit-prereq">Pre-Req: Dexterity •••, a Specialty in Brawl</div>
+          <div class="merit-desc">Choose a Specialty in Brawl when purchasing this Merit. Extensive training in that style allows your character to benefit more from alacrity than strength. She may substitute her <strong>Dexterity for Strength</strong> when making rolls with that Specialty. May be purchased multiple times for multiple Specialties.</div>
+        </div>
+        <div class="merit-dots">••</div>
+      </div>
+      <div class="merit-row">
+        <div class="merit-body">
+          <div class="merit-name">Iron Skin</div>
+          <div class="merit-prereq">Pre-Req: Brawl ••, Stamina ••• (1st dot) · Stamina •••• (2nd dot)</div>
+          <div class="merit-desc">Confers <strong>2 points of general Armor</strong> against any source of damage. Does not stack with armor from equipment.</div>
+        </div>
+        <div class="merit-dots">••</div>
+      </div>
+      <div class="merit-row" style="border:none">
+        <div class="merit-body">
+          <div class="merit-name">Headbutt</div>
+          <div class="merit-prereq">Pre-Req: Brawl ••</div>
+          <div class="merit-desc">Your character has found few arguments she can't end by ramming her skull into a softer part of the anatomy. Allows a new grappling maneuver: inflict the <strong>Stunned Tilt</strong> on her opponent. Each use in a scene imposes a <strong>−2 penalty</strong> as the shock and surprise wear off.</div>
+        </div>
+        <div class="merit-dots">•</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="brush-divider"></div>
+
+  <!-- UTILITY -->
+  <div class="section">
+    <div class="section-title">Utility Merits</div>
+    <div class="card ink">
+      <div class="merit-row">
+        <div class="merit-body">
+          <div class="merit-name">Wine Cabinet <em style="font-size:13px;font-weight:400;color:var(--soft)">(Herd)</em></div>
+          <div class="merit-desc">A small but stable group of around <strong>five or six mortals</strong> devoted to you, who willingly offer their blood. Their blood can sustain you over a week of regular feeding.</div>
+          <div class="merit-mech">6 Blood Points per episode · safe and discreet · no hunting required · blood bond risk mitigated by the voluntary nature of the arrangement</div>
+        </div>
+        <div class="merit-dots">••</div>
+      </div>
+      <div class="merit-row">
+        <div class="merit-body">
+          <div class="merit-name">Double Jointed</div>
+          <div class="merit-prereq">Pre-Req: Dexterity •••</div>
+          <div class="merit-desc">Your character can dislodge joints when need be. She <strong>automatically escapes from any mundane bonds</strong> without a roll. When grappled, subtract her Dexterity from any rolls to overpower her.</div>
+        </div>
+        <div class="merit-dots">••</div>
+      </div>
+      <div class="merit-row">
+        <div class="merit-body">
+          <div class="merit-name">Area of Expertise <em style="font-size:13px;font-weight:400;color:var(--soft)">(Brawl)</em></div>
+          <div class="merit-desc">An additional Specialty in Brawl. <strong>+1 die</strong> in situations within that expertise.</div>
+        </div>
+        <div class="merit-dots">•</div>
+      </div>
+      <div class="merit-row">
+        <div class="merit-body">
+          <div class="merit-name">Area of Expertise <em style="font-size:13px;font-weight:400;color:var(--soft)">(Larceny)</em></div>
+          <div class="merit-desc">An additional Specialty in Larceny. <strong>+1 die</strong> in situations within that expertise.</div>
+        </div>
+        <div class="merit-dots">•</div>
+      </div>
+      <div class="merit-row" style="border:none">
+        <div class="merit-body">
+          <div class="merit-name">Direction Sense</div>
+          <div class="merit-desc">Your character has an innate sense of direction and is always aware of her location in space. She always knows which direction she faces and <strong>never suffers penalties to navigate</strong> or find her way.</div>
+        </div>
+        <div class="merit-dots">•</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Flavor Merits</div>
+    <div class="card ink">
+      <div class="merit-row">
+        <div class="merit-body">
+          <div class="merit-name">Mentor <em style="font-size:13px;font-weight:400;color:var(--soft)">(Amanda)</em></div>
+          <div class="merit-desc">A respected figure with substantial knowledge of vampiric powers, occult lore, or supernatural mysteries. She may help develop more advanced gifts, refine blood use, or teach esoteric secrets. Provides guidance, training, and occasional access to rare resources.</div>
+          <div class="merit-mech">At ••• level: can teach intermediate-to-advanced gifts · provides insight into political strategy · personal investment in Morgana's development</div>
+        </div>
+        <div class="merit-dots">•••</div>
+      </div>
+      <div class="merit-row">
+        <div class="merit-body">
+          <div class="merit-name">Piggy Bank <em style="font-size:13px;font-weight:400;color:var(--soft)">(Resources)</em></div>
+          <div class="merit-desc">You are financially stable, with a reasonable income or modest savings. You can comfortably afford most day-to-day expenses and have enough to handle emergencies without significant stress.</div>
+          <div class="merit-mech">•• level: access to moderate funds for regular expenses · can afford most simple needs without issue</div>
+        </div>
+        <div class="merit-dots">••</div>
+      </div>
+      <div class="merit-row" style="border:none">
+        <div class="merit-body">
+          <div class="merit-name">Heightened Awareness</div>
+          <div class="merit-desc">Your character is perpetually alert and attuned to her surroundings, instinctively picking up on details others miss. She is rarely caught off guard and notices subtle changes in her environment without actively looking for them.</div>
+          <div class="merit-mech">+1 die to Perception rolls (Wits + Composure) to notice danger, ambushes, or hidden details · the GM may grant a passive heads-up where a normal character would be surprised</div>
+        </div>
+        <div class="merit-dots">•</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="brush-divider"></div>
+
+  <!-- FLAWS -->
+  <div class="section">
+    <div class="section-title">Flaws</div>
+
+    <div class="flaw-card">
+      <div class="flaw-header">
+        <div class="flaw-name">Striking Looks</div>
+        <div class="flaw-pts">•• · 2-Point Flaw</div>
+      </div>
+      <div class="flaw-text">Your character is ugly, alarming, or otherwise worthy of <em>negative</em> attention — extensive burn scarring, a glass eye, a face that draws stares. For two dots, lose <strong>2 dice on any Social rolls influenced by looks</strong> (Expression, Intimidation, Persuasion, Subterfuge, and others at ST discretion).</div>
+      <div class="flaw-mech">Any rolls to spot, notice, or remember her gain a +2 dice bonus. She may draw unwanted attention in social situations, causing further complications.</div>
+    </div>
+
+    <div class="flaw-card">
+      <div class="flaw-header">
+        <div class="flaw-name">Chronic Pain <em style="font-size:11px;font-weight:400">(Mild)</em></div>
+        <div class="flaw-pts">• · 1-Point Flaw</div>
+      </div>
+      <div class="flaw-text">An injury or disorder leaves her in severe pain on a regular basis. Roll <strong>4 dice once per day</strong>. On failure, a bout of pain begins — timing at ST discretion, usually during waking hours or triggered by stress.</div>
+      <div class="flaw-mech">
+        While in pain: <strong>−2 to all skill rolls</strong> · <strong>+1 success required</strong> on frenzy rolls.<br>
+        Pain usually lasts one hour; roll <em>Stamina + Survival</em> each hour to recover. If the attack occurs during sleep, suffer sleep deprivation penalties instead and fail to recover the nightly Willpower point.
+      </div>
+    </div>
+
+    <div class="flaw-card">
+      <div class="flaw-header">
+        <div class="flaw-name">No Depth Perception</div>
+        <div class="flaw-pts">• · 1-Point Flaw</div>
+      </div>
+      <div class="flaw-text">Lacks effective binocular vision and cannot visually judge distances. May have one eye, two eyes that don't work together, or a glass eye.</div>
+      <div class="flaw-mech">
+        <strong>−1 Dexterity</strong> in combat and on any task involving hand-eye coordination ·
+        <strong>−3 on ranged attacks</strong> (unless Aim action taken first) ·
+        <strong>−3 on rolls to operate any vehicle</strong> faster than a horse
+      </div>
+    </div>
+
+    <div class="flaw-card">
+      <div class="flaw-header">
+        <div class="flaw-name">Unlucky</div>
+        <div class="flaw-pts">• · 1-Point Flaw</div>
+      </div>
+      <div class="flaw-text">Spectacularly unfortunate. Disaster follows in her wake. A number of times per day equal to the points in this Flaw, the Storyteller may <strong>force a reroll of a successful roll</strong> and take the second result.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════
+     ANIMAL FORMS
+══════════════════════════════════════════ -->
+<div class="content" id="forms">
+
+  <div class="note note-loki" style="margin-bottom:18px;font-size:13.5px">In animal form, Morgana uses the beast's Physical Attributes and Skills, including its Size, Speed, and Health. She can still use her Gifts normally. She may maintain a number of forms equal to her <strong>Survival</strong> rank. To learn a new form: consume the animal, then slumber one full day and night merged with the earth.</div>
+
+  <!-- DOG -->
+  <div class="form-block">
+    <div class="form-name">🐕 Dog (Large)</div>
+    <div class="form-stat-grid">
+      <div class="form-stat"><div class="form-stat-val">7</div><div class="form-stat-lbl">Health</div></div>
+      <div class="form-stat"><div class="form-stat-val">7</div><div class="form-stat-lbl">Willpower</div></div>
+      <div class="form-stat"><div class="form-stat-val">14</div><div class="form-stat-lbl">Speed (factor 7)</div></div>
+      <div class="form-stat"><div class="form-stat-val">8</div><div class="form-stat-lbl">Defense</div></div>
+      <div class="form-stat"><div class="form-stat-val">6</div><div class="form-stat-lbl">Initiative</div></div>
+      <div class="form-stat"><div class="form-stat-val">4</div><div class="form-stat-lbl">Size</div></div>
+    </div>
+    <span class="attr-label">Attributes</span>
+    <div class="attr-text">Int 1 · Wits 4 · Resolve 4 · Str 4 · Dex 3 · Sta 3 · Pre 4 · Man 1 · Com 3</div>
+    <span class="attr-label">Skills</span>
+    <div class="attr-text">Athletics (Running) 4 · Brawl 3 · Intimidation 3 · Stealth 1 · Survival (Tracking) 3</div>
+    <div class="attack-row header"><div>Attack</div><div>Damage</div><div>Dice Pool</div></div>
+    <div class="attack-row"><div>Bite</div><div style="text-align:center">+0</div><div class="attack-val">6</div></div>
+  </div>
+
+  <!-- WEASEL -->
+  <div class="form-block">
+    <div class="form-name">🦨 Weasel / Ferret</div>
+    <div class="form-stat-grid">
+      <div class="form-stat"><div class="form-stat-val">4</div><div class="form-stat-lbl">Health</div></div>
+      <div class="form-stat"><div class="form-stat-val">4</div><div class="form-stat-lbl">Willpower</div></div>
+      <div class="form-stat"><div class="form-stat-val">11</div><div class="form-stat-lbl">Speed (factor 7)</div></div>
+      <div class="form-stat"><div class="form-stat-val">5</div><div class="form-stat-lbl">Defense</div></div>
+      <div class="form-stat"><div class="form-stat-val">5</div><div class="form-stat-lbl">Initiative</div></div>
+      <div class="form-stat"><div class="form-stat-val">2</div><div class="form-stat-lbl">Size</div></div>
+    </div>
+    <span class="attr-label">Attributes</span>
+    <div class="attr-text">Int 1 · Wits 2 · Resolve 2 · Str 1 · Dex 3 · Sta 2 · Pre 2 · Man 1 · Com 2</div>
+    <span class="attr-label">Skills</span>
+    <div class="attr-text">Athletics 2 · Brawl 1 · Intimidation 1 · Stealth 4 · Survival 3</div>
+    <div class="attack-row header"><div>Attack</div><div>Damage</div><div>Dice Pool</div></div>
+    <div class="attack-row"><div>Bite</div><div style="text-align:center">+0</div><div class="attack-val">2</div></div>
+    <div class="note note-loki" style="margin-top:10px;font-size:12.5px">Morgana's most natural form — Stealth 4 and minimal size make this ideal for surveillance and infiltration.</div>
+  </div>
+
+  <!-- BAT -->
+  <div class="form-block">
+    <div class="form-name">🦇 Bat</div>
+    <div class="form-stat-grid">
+      <div class="form-stat"><div class="form-stat-val">2</div><div class="form-stat-lbl">Health</div></div>
+      <div class="form-stat"><div class="form-stat-val">1</div><div class="form-stat-lbl">Willpower</div></div>
+      <div class="form-stat"><div class="form-stat-val">15</div><div class="form-stat-lbl">Speed (flight, factor 10)</div></div>
+      <div class="form-stat"><div class="form-stat-val">8</div><div class="form-stat-lbl">Defense</div></div>
+      <div class="form-stat"><div class="form-stat-val">9</div><div class="form-stat-lbl">Initiative</div></div>
+      <div class="form-stat"><div class="form-stat-val">1</div><div class="form-stat-lbl">Size</div></div>
+    </div>
+    <span class="attr-label">Attributes</span>
+    <div class="attr-text">Int 0 · Wits 1 · Resolve 0 · Str 1 · Dex 4 · Sta 1 · Pre 1 · Man 0 · Com 1</div>
+    <span class="attr-label">Skills</span>
+    <div class="attr-text">Athletics (Flight) 4 · Brawl 1 · Survival 3</div>
+    <div class="attack-row header"><div>Attack</div><div>Damage</div><div>Dice Pool</div></div>
+    <div class="attack-row"><div>Bite</div><div style="text-align:center">—</div><div class="attack-val">2</div></div>
+    <div class="note note-loki" style="margin-top:10px;font-size:12.5px"><strong>Special:</strong> Bats can see and maneuver in total darkness without penalty. Movement by flight only.</div>
+  </div>
+
+</div>
+</div><!-- content-wrap -->
+
+<script>
+function showTab(id,el){
+  document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ── PERSISTENCE ──
+var STORE_KEY='morgana-sheet-v2';
+var state={bloodSpent:0,willSpent:0,humCurrent:8,ravenMarks:0,adapt:[]};
+// migrate old adaptation key if present
+try{
+  var oldAdapt=localStorage.getItem('morg-adapt');
+  if(oldAdapt){state.adapt=JSON.parse(oldAdapt);}
+}catch(e){}
+try{
+  var saved=localStorage.getItem(STORE_KEY);
+  if(saved){var s=JSON.parse(saved);for(var k in s){if(s[k]!==undefined)state[k]=s[k];}}
+}catch(e){}
+
+var saveTimer;
+function save(){
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(state));}catch(e){}
+  var el=document.getElementById('save-status');
+  if(el){
+    el.classList.add('show');
+    clearTimeout(saveTimer);
+    saveTimer=setTimeout(function(){el.classList.remove('show');},1200);
+  }
+}
+
+function resetTrackers(){
+  if(!confirm('Reset all trackers? Vitae and Willpower back to full, Humanity to 8, Raven Marks cleared. (Predatory Aspect adaptations are kept.)'))return;
+  state.bloodSpent=0;
+  state.willSpent=0;
+  state.humCurrent=8;
+  state.ravenMarks=0;
+  save();
+  renderBlood();renderWill();renderHum();renderRaven();
+}
+
+// VITAE
+var bloodMax=10;
+function renderBlood(){
+  var t=document.getElementById('blood-track'),c=document.getElementById('blood-count');
+  t.innerHTML='';
+  for(var i=0;i<bloodMax;i++){
+    var d=document.createElement('div');
+    d.className='dot dot-blood'+(i>=(bloodMax-state.bloodSpent)?' empty':'');
+    (function(idx){d.addEventListener('click',function(){
+      if(idx<(bloodMax-state.bloodSpent))state.bloodSpent=Math.min(bloodMax,state.bloodSpent+1);
+      else state.bloodSpent=Math.max(0,state.bloodSpent-1);
+      save();renderBlood();
+    });})(i);
+    t.appendChild(d);
+  }
+  c.textContent=bloodMax-state.bloodSpent;
+}
+
+// WILLPOWER
+var willMax=7;
+function renderWill(){
+  var t=document.getElementById('will-track'),c=document.getElementById('will-count');
+  t.innerHTML='';
+  for(var i=0;i<willMax;i++){
+    var d=document.createElement('div');
+    d.className='dot'+(i>=(willMax-state.willSpent)?' empty':'');
+    (function(idx){
+      d.addEventListener('click',function(){
+        if(idx<(willMax-state.willSpent))state.willSpent=Math.min(willMax,state.willSpent+1);
+        else state.willSpent=Math.max(0,state.willSpent-1);
+        save();renderWill();
+      });
+      d.addEventListener('contextmenu',function(e){e.preventDefault();state.willSpent=0;save();renderWill();});
+    })(i);
+    t.appendChild(d);
+  }
+  c.textContent=willMax-state.willSpent;
+}
+
+// HUMANITY
+var humMax=10;
+function renderHum(){
+  var t=document.getElementById('hum-track'),c=document.getElementById('hum-count');
+  t.innerHTML='';
+  for(var i=0;i<humMax;i++){
+    var d=document.createElement('div');
+    d.className='dot dot-hum'+(i>=state.humCurrent?' empty':'');
+    (function(idx){d.addEventListener('click',function(){
+      if(idx<state.humCurrent)state.humCurrent=Math.max(0,state.humCurrent-1);
+      else state.humCurrent=Math.min(humMax,state.humCurrent+1);
+      save();renderHum();
+    });})(i);
+    t.appendChild(d);
+  }
+  c.textContent=state.humCurrent;
+}
+
+// RAVEN MARKS
+var ravenMax=10;
+function renderRaven(){
+  var t=document.getElementById('raven-track');
+  if(!t)return;
+  t.innerHTML='';
+  for(var i=0;i<ravenMax;i++){
+    if(i===3||i===5||i===7){
+      var sep=document.createElement('span');
+      sep.className='raven-threshold';
+      sep.textContent=i===3?'▲':'+2';
+      t.appendChild(sep);
+    }
+    var d=document.createElement('div');
+    d.className='raven-mark'+(i>=state.ravenMarks?' empty':'');
+    (function(idx){
+      d.addEventListener('click',function(){
+        if(idx<state.ravenMarks)state.ravenMarks=Math.max(0,state.ravenMarks-1);
+        else state.ravenMarks=Math.min(ravenMax,state.ravenMarks+1);
+        save();renderRaven();
+      });
+      d.addEventListener('contextmenu',function(e){e.preventDefault();state.ravenMarks=0;save();renderRaven();});
+    })(i);
+    t.appendChild(d);
+  }
+}
+
+// PREDATORY ASPECT
+var adaptations=[
+  {name:'Feral Senses',desc:'Hawk\'s eyes or a dog\'s sense of smell — hear heartbeats and see/smell blood as though Blood Potency were two dots higher.'},
+  {name:'Claws',desc:'Sharp claws — 1L mundane weapon that uses Brawl to attack.'},
+  {name:'Camouflage',desc:'Remove 4 dice from checks against your Stealth.'},
+  {name:'Quadripedal',desc:'Running on all fours adds +4 Speed and doubles jump distances.'},
+  {name:'Constricting Grip',desc:'Arms swell and elongate. Victims lose the 10-again quality on rolls to oppose your grapples.'},
+  {name:'Patagia / Weight of the Feather',desc:'Reduce effective mass and density. Can glide when falling ≥10 yards (travel 30 yards horizontally, no fall damage).'},
+  {name:'Prehensile Tail',desc:'A long prehensile tail usable as an extra arm — cannot perform fine-motor tasks (locks, firearms).'},
+  {name:'Hulk',desc:'Gain one level of Size (more HP). Opponents suffer −2 on all rolls to establish grapples with you.'},
+  {name:'Aquatic',desc:'Can swim at the same speed she can run on land.'},
+  {name:'Extra Senses / Wall Crawling',desc:'Additional heightened senses or the ability to traverse vertical and inverted surfaces.'},
+];
+function renderAdapt(){
+  var g=document.getElementById('adapt-grid');
+  if(!g)return;
+  g.innerHTML='';
+  adaptations.forEach(function(a,i){
+    var div=document.createElement('div');
+    var isChosen=state.adapt.includes(i);
+    var isLocked=state.adapt.length>=3&&!isChosen;
+    div.className='adapt-item'+(isChosen?' chosen':'')+(isLocked?' locked':'');
+    div.innerHTML='<div class="adapt-check"></div><div><div class="adapt-name">'+a.name+'</div><div class="adapt-desc">'+a.desc+'</div></div>';
+    if(!isLocked){
+      div.addEventListener('click',function(){
+        if(state.adapt.includes(i))state.adapt=state.adapt.filter(function(x){return x!==i;});
+        else if(state.adapt.length<3)state.adapt.push(i);
+        save();renderAdapt();
+      });
+    }
+    g.appendChild(div);
+  });
+  var status=document.createElement('div');
+  status.style.cssText='font-family:Cinzel,serif;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--loki);margin-top:10px;grid-column:1/-1;opacity:0.8';
+  status.textContent=state.adapt.length+' / 3 adaptations selected';
+  g.appendChild(status);
+}
+
+renderBlood();renderWill();renderHum();renderRaven();renderAdapt();
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grimório de Fichas — Mari</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1c160a;
+  --gold:#2c2420;
+  --soft:#6a5a3a;
+  --muted:#a89878;
+  --blood:#7a1a1a;
+  --blood-dim:rgba(122,26,26,0.10);
+  --blood-border:rgba(122,26,26,0.3);
+  --surface:rgba(255,252,244,0.85);
+}
+body{
+  background:radial-gradient(circle at top left,rgba(60,40,20,.07),transparent 35%),radial-gradient(circle at bottom right,rgba(10,0,0,.06),transparent 40%),linear-gradient(to bottom,#ede0c8,#d8cdb5);
+  font-family:'EB Garamond',Georgia,serif;color:var(--ink);min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;padding:0 16px 60px
+}
+#paper-grain{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.wrap{position:relative;z-index:10;width:100%;max-width:780px}
+
+/* HEADER */
+header{text-align:center;padding:48px 0 32px}
+.crest{font-size:40px;margin-bottom:10px;opacity:0.85}
+h1{font-family:'Cinzel',serif;font-size:34px;font-weight:900;letter-spacing:0.08em;color:var(--ink);line-height:1.1}
+.subtitle{font-size:15px;font-style:italic;color:var(--soft);margin-top:8px;letter-spacing:0.02em}
+.header-rule{width:80px;height:2px;background:linear-gradient(90deg,transparent,var(--blood),transparent);margin:20px auto 0}
+
+/* CAMPAIGN */
+.campaign{margin-bottom:36px}
+.campaign-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.campaign-icon{font-size:20px}
+.campaign-title{font-family:'Cinzel',serif;font-size:13px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold)}
+.campaign-meta{font-size:12px;font-style:italic;color:var(--muted);margin-left:auto}
+.campaign-rule{flex:1;height:1px;background:rgba(44,36,32,0.15);max-width:60px}
+
+/* CARD GRID */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+
+/* CHARACTER CARD */
+.char-card{
+  background:var(--surface);
+  border:1px solid rgba(40,20,10,.14);
+  border-left:3px solid var(--accent,var(--ink));
+  padding:16px 18px;
+  position:relative;overflow:hidden;
+  text-decoration:none;color:inherit;
+  display:block;transition:transform .15s,box-shadow .15s;
+}
+.char-card::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(70,50,30,.015) 0px,rgba(70,50,30,.015) 1px,transparent 1px,transparent 4px);opacity:.35;pointer-events:none;mix-blend-mode:multiply}
+.char-card.live:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(40,20,10,0.12)}
+.char-card>*{position:relative;z-index:1}
+.char-emoji{font-size:24px;margin-bottom:8px;display:block}
+.char-name{font-family:'Cinzel',serif;font-size:17px;font-weight:700;letter-spacing:0.03em;color:var(--ink);margin-bottom:3px}
+.char-player{font-size:13px;color:var(--soft);font-style:italic;line-height:1.4}
+.char-tag{display:inline-block;font-family:'Cinzel',serif;font-size:8px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:2px 7px;margin-top:10px;border:1px solid var(--accent-border,rgba(44,36,32,0.2));background:var(--accent-dim,rgba(44,36,32,0.06));color:var(--accent,var(--ink))}
+.char-card.soon{opacity:0.55;cursor:default}
+.char-card.soon .char-tag{background:rgba(0,0,0,0.04);color:var(--muted);border-color:rgba(0,0,0,0.12)}
+.char-arrow{position:absolute;top:16px;right:16px;font-size:16px;color:var(--accent,var(--muted));opacity:0;transition:opacity .15s,transform .15s;z-index:2}
+.char-card.live:hover .char-arrow{opacity:0.7;transform:translateX(2px)}
+
+/* color themes */
+.theme-morrigan{--accent:#4a1870;--accent-dim:rgba(74,24,112,0.09);--accent-border:rgba(74,24,112,0.3)}
+.theme-blood{--accent:#7a1a1a;--accent-dim:rgba(122,26,26,0.09);--accent-border:rgba(122,26,26,0.3)}
+.theme-green{--accent:#2a5428;--accent-dim:rgba(42,84,40,0.09);--accent-border:rgba(42,84,40,0.3)}
+.theme-amber{--accent:#7a4515;--accent-dim:rgba(122,69,21,0.09);--accent-border:rgba(122,69,21,0.3)}
+.theme-ink{--accent:#1c160a;--accent-dim:rgba(44,36,32,0.06);--accent-border:rgba(44,36,32,0.2)}
+
+/* FOOTER */
+footer{text-align:center;margin-top:30px;font-size:12px;color:var(--muted);font-style:italic;line-height:1.7}
+.add-note{background:rgba(122,26,26,0.04);border:1px dashed var(--blood-border);padding:12px 16px;border-radius:3px;font-size:13px;color:var(--soft);line-height:1.6;margin-top:20px;text-align:left}
+.add-note strong{color:var(--blood);font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+</style>
+</head>
+<body>
+
+<svg id="paper-grain" aria-hidden="true">
+  <defs><filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.68 0.52" numOctaves="4" seed="7" stitchTiles="stitch" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0.38  0 0 0 0 0.26  0 0 0 0 0.1  0 0 0 0.055 0"/></filter></defs>
+  <rect width="100%" height="100%" filter="url(#grain)"/>
+</svg>
+
+<div class="wrap">
+
+  <header>
+    <div class="crest">🦇</div>
+    <h1>Grimório de Fichas</h1>
+    <div class="subtitle">Personagens & coteries · World of Darkness</div>
+    <div class="header-rule"></div>
+  </header>
+
+  <!-- ════════ CAMPANHA: MORRIGAN / DREADFORD ════════ -->
+  <div class="campaign">
+    <div class="campaign-head">
+      <span class="campaign-icon">🜏</span>
+      <span class="campaign-title">Dreadford / VtR Homebrew</span>
+      <span class="campaign-rule"></span>
+      <span class="campaign-meta">House Morrigan</span>
+    </div>
+    <div class="card-grid">
+
+      <a href="morgana-play-aid.html" class="char-card live theme-morrigan">
+        <span class="char-arrow">→</span>
+        <span class="char-emoji">🦨</span>
+        <div class="char-name">Morgana</div>
+        <div class="char-player">Alice Machado Lima · Bloodling</div>
+        <span class="char-tag">Play Aid Pronto</span>
+      </a>
+
+      <div class="char-card soon theme-ink">
+        <span class="char-emoji">🎭</span>
+        <div class="char-name">Petrushka</div>
+        <div class="char-player">Ars Mortis · Nergal's Favor</div>
+        <span class="char-tag">Em breve</span>
+      </div>
+
+      <div class="char-card soon theme-ink">
+        <span class="char-emoji">🌫️</span>
+        <div class="char-name">Jolene</div>
+        <div class="char-player">Baba Yaga · Athena's Mirror</div>
+        <span class="char-tag">Em breve</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════ CAMPANHA: PRESENTE (WALTER) ════════ -->
+  <div class="campaign">
+    <div class="campaign-head">
+      <span class="campaign-icon">🌃</span>
+      <span class="campaign-title">Campanha Presente · com Walter</span>
+      <span class="campaign-rule"></span>
+      <span class="campaign-meta">Dia atual</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="char-card soon theme-blood">
+        <span class="char-emoji">🩸</span>
+        <div class="char-name">Adicionar ficha</div>
+        <div class="char-player">Quando estiver em HTML, entra aqui</div>
+        <span class="char-tag">Vazio</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════ CAMPANHA: NOĆNA VEGLIA ════════ -->
+  <div class="campaign">
+    <div class="campaign-head">
+      <span class="campaign-icon">🕯️</span>
+      <span class="campaign-title">Noćna Veglia · Velmora 1927</span>
+      <span class="campaign-rule"></span>
+      <span class="campaign-meta">VtM V20 · ST: Mari</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="char-card soon theme-amber">
+        <span class="char-emoji">🎻</span>
+        <div class="char-name">NPCs & aliados</div>
+        <div class="char-player">Fichas da sua campanha como ST</div>
+        <span class="char-tag">Em breve</span>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="add-note">
+    <strong>Como adicionar uma ficha nova</strong>
+    Quando a gente montar a próxima ficha em HTML, é só jogar o arquivo na mesma pasta e criar um card aqui apontando pra ele. Os cards "Em breve" viram links clicáveis (classe <code>live</code> no lugar de <code>soon</code>, e <code>href</code> pro arquivo). Me chama que eu faço!
+  </div>
+
+  <footer>
+    Cada ficha guarda seu próprio progresso no navegador.<br>
+    🦇 · Feito com sangue, tinta e um pouco de código
+  </footer>
+
+</div>
+</body>
+</html>
