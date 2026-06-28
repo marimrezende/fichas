@@ -52,6 +52,8 @@ body{
 .save-status.show{opacity:0.7}
 .reset-btn{font-family:'Marcellus',serif;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;background:transparent;border:1px solid var(--gold-border);color:var(--soft);cursor:pointer;transition:all .15s;border-radius:2px}
 .reset-btn:hover{background:var(--blood-dim);border-color:var(--blood-border);color:var(--blood)}
+.grimoire-link{display:inline-block;font-family:'Marcellus',serif;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;margin-bottom:10px;transition:color .15s;align-self:flex-start}
+.grimoire-link:hover{color:var(--blood)}
 .tabs{display:flex;gap:0;border-top:1px solid rgba(44,36,32,0.12);overflow-x:auto}
 .tab{font-family:'Marcellus',serif;font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:10px 18px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:color .15s,border-color .15s;user-select:none;white-space:nowrap}
 .tab:hover{color:var(--ink)}
@@ -244,6 +246,7 @@ body{
 </svg>
 
 <div class="app-header">
+  <a href="index.html" class="grimoire-link">❦ &nbsp;Voltar ao Grimório</a>
   <div class="header-top">
     <div>
       <span class="char-name">🩸 Morgana</span>
@@ -573,39 +576,47 @@ body{
     </div>
 
     <div class="card circe">
-      <div class="gift-name">Child of the Night</div>
+      <div class="gift-name">Child of the Night <span style="font-weight:400;font-style:italic;font-size:14px;color:var(--soft)">(Bloodling / Neophyte rank)</span></div>
+      <div class="gift-flavor">With this power, a user of Circe's Call becomes capable of passively sensing the Wits of animals in their vicinity.</div>
       <div class="cost-block">
-        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">—</span></div>
-        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Instant</span></div>
-        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Scene</span></div>
+        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">None</span></div>
+        <div class="cost-row"><span class="cost-lbl">Dice Pool</span><span class="cost-val">None</span></div>
+        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">None</span></div>
+        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Always On</span></div>
       </div>
-      <div class="gift-text dropcap">The vampire calls animals of a specific type (bats, rats, wolves, crows, etc.) from the surrounding area. Creatures within range respond and come to her. They are not compelled to act suicidally, but will obey orders within their natural capabilities — serving as scouts, distractions, or aid in simple tasks. The number and type of animals depends on the environment and the Storyteller's discretion.</div>
+      <div class="gift-text dropcap">This power functions as an extension of the normal vampiric senses. Just as a vampire can smell the presence of blood from about ten yards or meters per dot of Blood Potency without rolling, she can now also intuitively sense any kind of animal at this range, multiplied by her Animal Ken dots.</div>
     </div>
 
     <div class="card circe">
-      <div class="gift-name">Beast Speech</div>
+      <div class="gift-name">Beast Speech <span style="font-weight:400;font-style:italic;font-size:14px;color:var(--soft)">(Bloodling / Neophyte rank)</span></div>
+      <div class="gift-flavor">Your voice resonates with the beasts, a universal language that bridges the gap between predator and prey. You can communicate with and command animals. Animals understand you, and you understand them.</div>
       <div class="cost-block">
-        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">—</span></div>
-        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Reflexive</span></div>
-        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Scene</span></div>
-      </div>
-      <div class="gift-text">Morgana communicates with animals of any kind — understanding their intentions, simple emotions, and basic thoughts, and conveying simple messages back. Communication is intuitive rather than linguistic: more sensation and image than words. Does not guarantee cooperation — only communication. Especially effective with animals she knows well (the horses at the stable, animals she has taken the form of).</div>
-    </div>
-
-    <div class="card circe">
-      <div class="gift-name">Bird in Ear</div>
-      <div class="cost-block">
-        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">—</span></div>
+        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">None</span></div>
+        <div class="cost-row"><span class="cost-lbl">Dice Pool</span><span class="cost-val">Wits + Animal Ken + Circe's Call</span></div>
         <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Instant</span></div>
-        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Concentration</span></div>
+        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">Up to 24 hours</span></div>
       </div>
-      <div class="gift-text">The vampire pushes her consciousness into an animal she can see and perceives the world through its senses — sight, hearing, smell — as if she were the creature herself. While inhabiting the animal's perspective, her own body remains still and unresponsive. She can guide the animal toward targets of interest but cannot make it act against its nature.</div>
+      <div class="gift-text">Commands must be simple and last no longer than 24 hours. You can ask questions and the creature responds as best it can. You can relay commands using human words or if you don't want to be understood you can use animal sounds.</div>
       <div class="gift-extras">
-        <div class="extra-item">Works especially well with birds and bats — silent scouts with high vantage points and keen senses.</div>
-        <div class="extra-item"><strong>Ending the link</strong> is reflexive. If the animal is killed or suffers serious harm while she is linked, she immediately snaps back to her own body and may be disoriented for a moment at ST discretion.</div>
-        <div class="extra-item">Cannot be used simultaneously with Beast's Skin — she cannot be inside an animal while also being one.</div>
+        <div class="extra-item">You may also address a group of similar animals (e.g., a flock of birds or a swarm of rats) if you can see and be heard by all of them.</div>
+        <div class="extra-item">Commands are broken if the animal is injured or senses significant risk to its safety.</div>
+        <div class="extra-item">You can use animal sounds to speak with other vampires who also possess this power.</div>
       </div>
-      <div class="note note-orange" style="font-size:14.5px">⚠ Description inferred from context — confirm mechanics with your ST. No dedicated Notion page found.</div>
+    </div>
+
+    <div class="card circe">
+      <div class="gift-name">Bird in Ear <span style="font-weight:400;font-style:italic;font-size:14px;color:var(--soft)">(Bloodling / Neophyte rank)</span></div>
+      <div class="gift-flavor">Vampires developed this power in order to better communicate with other vampires who do not master Circe's Call. The vampire imbues a message in a small animal who then carries the message to its intended recipient, relaying it in the vampire's own voice.</div>
+      <div class="cost-block">
+        <div class="cost-row"><span class="cost-lbl">Cost</span><span class="cost-val">1 Blood Point</span></div>
+        <div class="cost-row"><span class="cost-lbl">Dice Pool</span><span class="cost-val">None</span></div>
+        <div class="cost-row"><span class="cost-lbl">Action</span><span class="cost-val">Instant</span></div>
+        <div class="cost-row"><span class="cost-lbl">Duration</span><span class="cost-val">1 day per Animal Ken Rating</span></div>
+      </div>
+      <div class="gift-text">The player spends one blood point to imbue the message in a small animal. The animal can be any creature, but if it must travel long distances, a bird is best. The vampire speaks the message he wants carried to the animal and commands it with his will to deliver the message to his intended recipient. The vampire must have a clear image in his mind of who the animal must find. When the animal arrives at its destination, the message is delivered as the vampire spoke it, the illusion of his voice emanating from the animal.</div>
+      <div class="gift-extras">
+        <div class="extra-item">Once the power is used, the animal has a number of days equal to the vampire's Blood Potency to find its designated recipient and deliver the message, otherwise the effect fades and the message is lost.</div>
+      </div>
     </div>
   </div>
 
@@ -755,9 +766,9 @@ body{
         <div class="merit-body">
           <div class="merit-name">Heightened Awareness</div>
           <div class="merit-desc">Your character is perpetually alert and attuned to her surroundings, instinctively picking up on details others miss. She is rarely caught off guard and notices subtle changes in her environment without actively looking for them.</div>
-          <div class="merit-mech">+1 die to Perception rolls (Wits + Composure) to notice danger, ambushes, or hidden details · the GM may grant a passive heads-up where a normal character would be surprised</div>
+          <div class="merit-mech">Any time you make a Perception roll (usually <strong>Wits + Composure</strong>) you receive <strong>+2 to the roll</strong>.</div>
         </div>
-        <div class="merit-dots">•</div>
+        <div class="merit-dots">••</div>
       </div>
     </div>
   </div>
