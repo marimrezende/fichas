@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Renji · Reiki</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Shippori+Mincho:wght@500;800&display=swap" rel="stylesheet">
+<style>
+/* Layout: sticky ink header + tabs; single 860px column of paper "folios"; 間 watermark behind everything. */
+:root{
+  --paper:#f0ead8;
+  --paper-hi:#f7f2e4;
+  --paper-lo:#e6dec8;
+  --ink:#2c2420;
+  --ink-soft:#64553f;
+  --ink-faint:#9c8d72;
+  --rule:rgba(44,36,32,.16);
+  --rule-strong:rgba(44,36,32,.32);
+  --time:#1f3a6e;   --time-wash:rgba(31,58,110,.08);
+  --spirit:#1d5444; --spirit-wash:rgba(29,84,68,.08);
+  --matter:#7a4a24; --matter-wash:rgba(122,74,36,.09);
+  --blood:#7d1c1c;  --blood-wash:rgba(125,28,28,.08);
+  --ok:#2c6230; --warn:#a45a12;
+  --f-display:'Cinzel',Georgia,serif;
+  --f-body:'EB Garamond',Georgia,'Times New Roman',serif;
+  --f-kanji:'Shippori Mincho','Hiragino Mincho ProN','Yu Mincho',serif;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--paper)}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:16px;
+  line-height:1.55;
+  min-height:100vh;
+  overflow-x:hidden;
+  font-variant-numeric:lining-nums;
+}
+#grain{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.watermark{
+  position:fixed;right:-4vw;bottom:-6vh;z-index:0;pointer-events:none;
+  font-family:var(--f-kanji);font-weight:800;
+  font-size:min(62vw,560px);line-height:1;color:var(--ink);opacity:.045;
+  user-select:none;
+}
+header,main{position:relative;z-index:2}
+
+/* HEADER */
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(240,234,216,.96);
+  border-bottom:1px solid var(--rule-strong);
+  padding-top:env(safe-area-inset-top,0px);
+}
+.head-inner{max-width:860px;margin:0 auto;padding:14px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
+.id-row{display:flex;align-items:flex-end;justify-content:space-between;gap:10px 18px;flex-wrap:wrap}
+.name{font-family:var(--f-display);font-weight:700;font-size:24px;letter-spacing:.04em;line-height:1}
+.name small{font-size:13px;font-weight:600;letter-spacing:.2em;color:var(--ink-soft);margin-left:10px;text-transform:uppercase}
+.lineage{font-style:italic;color:var(--ink-soft);font-size:14px;margin-top:4px}
+.vitals-mini{display:flex;gap:6px;flex-wrap:wrap}
+.vm{font-family:var(--f-display);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border:1px solid var(--rule-strong);background:var(--paper-hi);white-space:nowrap;font-variant-numeric:tabular-nums}
+.vm b{font-size:13px}
+nav{display:flex;margin-top:12px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.tab{font-family:var(--f-display);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:10px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--ink-faint);cursor:pointer;white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.tab:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--time);outline-offset:2px}
+
+main{max-width:860px;margin:0 auto;padding-block:22px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.panel{display:flex;flex-direction:column;gap:26px}
+.panel[hidden]{display:none!important}
+
+/* SECTION HEADS */
+.sec{display:flex;flex-direction:column;gap:10px}
+.sec-h{display:flex;align-items:baseline;gap:10px;font-family:var(--f-display);font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+.sec-h::after{content:"";flex:1;height:1px;background:var(--rule-strong)}
+.sec-h .aside{font-family:var(--f-body);font-style:italic;text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink-faint);font-weight:400}
+
+.folio{background:var(--paper-hi);border:1px solid var(--rule);padding:16px 18px;position:relative}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:620px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:repeat(2,1fr)}}
+.grid2>*,.grid3>*{min-width:0}
+
+.label{font-family:var(--f-display);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.hint{font-size:13.5px;color:var(--ink-soft);font-style:italic}
+.note{font-size:14px;line-height:1.5;padding:9px 12px;border-left:2px solid var(--ink);background:rgba(44,36,32,.04)}
+.note.time{border-color:var(--time);background:var(--time-wash)}
+.note.blood{border-color:var(--blood);background:var(--blood-wash)}
+.note b,.hint b{font-style:normal;color:var(--ink)}
+
+/* TRACKS */
+.track-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+.track-val{font-family:var(--f-display);font-weight:700;font-size:20px;font-variant-numeric:tabular-nums}
+.track-val span{font-size:13px;color:var(--ink-faint);font-weight:600}
+.dots{display:flex;gap:7px;flex-wrap:wrap}
+.dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--ink);background:var(--ink);cursor:pointer;padding:0;transition:background .12s,opacity .12s}
+.dot.spent{background:transparent;opacity:.35}
+.pip{width:14px;height:14px;border-radius:50%;background:var(--ink)}
+.pip.empty{background:transparent;border:1px solid var(--rule-strong)}
+.boxes{display:flex;gap:5px;flex-wrap:wrap}
+.box{width:30px;height:30px;border:1.5px solid var(--ink);background:var(--paper);cursor:pointer;position:relative;padding:0;font-family:var(--f-display);font-weight:700;font-size:17px;line-height:1;color:var(--blood)}
+.box .wp{position:absolute;top:-15px;left:0;right:0;text-align:center;font-size:9px;color:var(--ink-faint);font-family:var(--f-display);font-weight:600}
+.boxes.pen{padding-top:14px}
+.mini-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.btn{font-family:var(--f-display);font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border:1px solid var(--rule-strong);background:var(--paper);color:var(--ink);cursor:pointer}
+.btn:hover{background:var(--paper-lo)}
+.btn.ghost{border-style:dashed}
+
+/* STAT INPUTS */
+.stat{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 6px;border:1px solid var(--rule);background:var(--paper-hi)}
+.stat input{width:64px;text-align:center;font-family:var(--f-display);font-weight:700;font-size:24px;border:none;border-bottom:1px dashed var(--rule-strong);background:transparent;color:var(--ink);font-variant-numeric:tabular-nums;-moz-appearance:textfield}
+.stat input::-webkit-outer-spin-button,.stat input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.stat input::placeholder{color:var(--ink-faint)}
+.stat .formula{font-size:11.5px;color:var(--ink-faint);font-style:italic;text-align:center;line-height:1.3}
+
+/* ARCANA */
+.arc-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:14px;padding:11px 14px;border:1px solid var(--rule);border-left:4px solid var(--c);background:var(--paper-hi)}
+.arc-row+.arc-row{margin-top:6px}
+.arc-name{font-family:var(--f-display);font-weight:600;font-size:15px;color:var(--c);letter-spacing:.04em}
+.arc-dots{font-size:18px;letter-spacing:3px;color:var(--c)}
+.arc-dots i{font-style:normal;opacity:.2}
+.tag{display:inline-block;font-family:var(--f-display);font-size:9.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;padding:2px 8px;border:1px solid var(--rule-strong);color:var(--ink-soft);background:var(--paper);white-space:nowrap}
+.tag.ruling{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tag.inferior{color:var(--blood);border-color:rgba(125,28,28,.35)}
+.tag.time{color:var(--time);border-color:rgba(31,58,110,.35);background:var(--time-wash)}
+.tag.spirit{color:var(--spirit);border-color:rgba(29,84,68,.35);background:var(--spirit-wash)}
+.tag.matter{color:var(--matter);border-color:rgba(122,74,36,.35);background:var(--matter-wash)}
+button.tag{cursor:pointer}
+button.tag:hover{border-color:var(--ink)}
+
+/* ATTRIBUTES / SKILLS / MERITS */
+.attr-grid{display:grid;grid-template-columns:auto repeat(3,1fr);gap:0;border:1px solid var(--rule);background:var(--paper-hi)}
+.attr-grid>div{padding:7px 12px;border-bottom:1px solid var(--rule);min-width:0}
+.attr-grid .rh{font-family:var(--f-display);font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);display:flex;align-items:center;border-right:1px solid var(--rule)}
+.attr-grid .ch{font-family:var(--f-display);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);background:var(--paper)}
+.attr{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.attr span:first-child{font-size:15.5px}
+.attr-grid>div:nth-last-child(-n+4){border-bottom:none}
+@media(max-width:620px){.attr-grid{grid-template-columns:1fr}.attr-grid .rh,.attr-grid .ch.blank{display:none}.attr-grid .ch{border-top:1px solid var(--rule)}}
+.skill-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 22px}
+@media(max-width:700px){.skill-cols{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.skill-cols{grid-template-columns:1fr}}
+.skill-cols>div{min-width:0}
+.sk-group{font-family:var(--f-display);font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin:4px 0 2px;display:flex;justify-content:space-between}
+.sk-group span{font-family:var(--f-body);font-style:italic;text-transform:none;letter-spacing:0;color:var(--ink-faint);font-weight:400;font-size:12.5px}
+.skill.zero .skill-name{color:var(--ink-faint)}
+.spec{display:block;font-size:12.5px;font-style:italic;color:var(--ink-soft);line-height:1.2}
+.merit{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--rule);font-size:15px}
+.merit:last-child{border-bottom:none}
+.merit .d{letter-spacing:2px;white-space:nowrap}
+.merit .d i{font-style:normal;opacity:.22}
+.merit small{display:block;font-size:12.5px;font-style:italic;color:var(--ink-soft)}
+.merit-h{font-family:var(--f-display);font-size:9.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-top:10px}
+.merit-h:first-child{margin-top:0}
+.flaw .d{color:var(--blood)}
+.combat-row{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:8px 0;border-bottom:1px solid var(--rule);align-items:baseline}
+.combat-row:last-child{border-bottom:none}
+.combat-row .big{font-family:var(--f-display);font-weight:700;font-size:20px;font-variant-numeric:tabular-nums;text-align:right}
+.combat-row .sub{grid-column:1/-1;font-size:13px;color:var(--ink-soft);font-style:italic;margin-top:-2px}
+.tag.cost{color:var(--blood);border-color:rgba(125,28,28,.35);background:var(--blood-wash)}
+.tag.order{color:var(--ink);border-color:var(--ink)}
+
+/* SKILLS */
+.skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px 18px}
+.skill{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--rule)}
+.skill-name{font-size:15px}
+.skill-name .tag{margin-left:6px;font-size:8.5px;padding:1px 5px}
+.sdots{display:flex;gap:3px}
+.sdot{width:15px;height:15px;border-radius:50%;border:1.5px solid var(--ink);background:transparent;cursor:pointer;padding:0}
+.sdot.on{background:var(--ink)}
+
+/* ACTIVE SPELLS */
+.slot{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px dashed var(--rule-strong);background:var(--paper-hi)}
+.slot+.slot{margin-top:6px}
+.slot .n{font-family:var(--f-display);font-size:11px;font-weight:600;color:var(--ink-faint);min-width:22px}
+.slot input{flex:1;min-width:0;border:none;background:transparent;font-family:var(--f-body);font-size:15.5px;font-style:italic;color:var(--ink)}
+.slot input::placeholder{color:var(--ink-faint)}
+.slot .x{background:none;border:none;color:var(--ink-faint);cursor:pointer;font-size:16px;padding:2px 6px}
+.slot .x:hover{color:var(--blood)}
+.slot.over{border-color:rgba(125,28,28,.4)}
+.slot.over .n{color:var(--blood)}
+textarea{width:100%;min-height:74px;resize:vertical;border:1px solid var(--rule);background:var(--paper-hi);padding:10px 12px;font-family:var(--f-body);font-size:15px;color:var(--ink);line-height:1.5}
+textarea::placeholder{color:var(--ink-faint);font-style:italic}
+
+/* SPELL CARDS */
+.spell{background:var(--paper-hi);border:1px solid var(--rule);border-left:4px solid var(--c)}
+.spell-top{padding:16px 18px 12px;display:flex;flex-direction:column;gap:10px}
+.spell-title{display:flex;align-items:baseline;justify-content:space-between;gap:8px 14px;flex-wrap:wrap}
+.spell-name{font-family:var(--f-display);font-weight:700;font-size:18px;letter-spacing:.02em}
+.spell-arc{font-family:var(--f-display);font-size:13px;font-weight:600;color:var(--c);letter-spacing:.06em}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.pool-strip{display:flex;align-items:stretch;gap:0;border:1px solid var(--rule);background:var(--paper);flex-wrap:wrap}
+.ps{padding:8px 14px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--rule)}
+.ps:last-child{border-right:none}
+.ps-v{font-family:var(--f-display);font-weight:700;font-size:19px;line-height:1.05;font-variant-numeric:tabular-nums}
+.ps-l{font-size:11px;color:var(--ink-soft);font-style:italic}
+.ps.grow{flex:1;min-width:150px}
+.effect-line{font-size:15px;line-height:1.5}
+details.fold{border-top:1px solid var(--rule)}
+details.fold>summary{list-style:none;cursor:pointer;padding:10px 18px;font-family:var(--f-display);font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary::before{content:"+";font-size:14px;width:12px;color:var(--ink)}
+details.fold[open]>summary::before{content:"−"}
+details.fold>summary:hover{color:var(--ink)}
+.fold-body{padding:2px 18px 16px}
+.book{font-size:15px;line-height:1.7;max-width:68ch}
+.book p+p{margin-top:10px}
+.reach-list{margin-top:12px;display:flex;flex-direction:column;gap:5px}
+.reach-list div{font-size:14.5px;color:var(--ink-soft);padding-left:16px;position:relative}
+.reach-list div::before{content:"✦";position:absolute;left:0;font-size:10px;top:4px;color:var(--c)}
+.reach-list b{color:var(--ink)}
+
+/* PLANNER */
+.planner{background:var(--paper)}
+.pl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 12px}
+@media(max-width:620px){.pl-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:400px){.pl-grid{grid-template-columns:1fr}}
+.f{display:flex;flex-direction:column;gap:3px;min-width:0}
+.f>span{font-family:var(--f-display);font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+select,.num{width:100%;font-family:var(--f-body);font-size:15px;color:var(--ink);background:var(--paper-hi);border:1px solid var(--rule-strong);padding:6px 8px;border-radius:0}
+.num{width:70px}
+.checks{display:flex;flex-wrap:wrap;gap:6px 8px;margin-top:12px}
+.chk{display:flex;align-items:center;gap:7px;padding:6px 10px;border:1px solid var(--rule);background:var(--paper-hi);cursor:pointer;font-size:14.5px;user-select:none}
+.chk input{accent-color:var(--ink);width:15px;height:15px}
+.chk em{font-style:normal;font-family:var(--f-display);font-size:10px;font-weight:600;color:var(--ink-soft);letter-spacing:.05em}
+.chk.dis{opacity:.45;cursor:not-allowed}
+.group-l{margin-top:14px}
+.inline-nums{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:8px;align-items:flex-end}
+.inline-nums .f{flex-direction:row;align-items:center;gap:8px}
+.inline-nums .f>span{max-width:150px}
+
+.result{margin-top:16px;border:1px solid var(--ink);background:var(--paper-hi)}
+.res-top{display:flex;flex-wrap:wrap}
+.res-cell{flex:1;min-width:110px;padding:10px 14px;border-right:1px solid var(--rule)}
+.res-cell:last-child{border-right:none}
+.res-cell .v{font-family:var(--f-display);font-weight:700;font-size:26px;line-height:1;font-variant-numeric:tabular-nums}
+.res-cell .v small{font-size:13px;color:var(--ink-faint)}
+.res-cell .l{font-size:12px;color:var(--ink-soft);font-style:italic;margin-top:3px}
+.res-cell.main{background:var(--ink);color:var(--paper)}
+.res-cell.main .l{color:rgba(240,234,216,.75)}
+.res-cell.danger .v{color:var(--blood)}
+.res-cell.okc .v{color:var(--ok)}
+.res-math{padding:10px 14px;border-top:1px solid var(--rule);font-size:13.5px;color:var(--ink-soft);line-height:1.6}
+.res-math b{color:var(--ink);font-weight:600}
+.res-warn{padding:8px 14px;border-top:1px solid var(--rule);display:flex;flex-direction:column;gap:4px}
+.res-warn div{font-size:13.5px;line-height:1.45;padding-left:14px;position:relative}
+.res-warn div::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;border-radius:50%;background:var(--warn)}
+.res-warn div.bad::before{background:var(--blood)}
+.res-warn div.info::before{background:var(--time)}
+
+/* MAGE ARMOR */
+.armor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:620px){.armor-grid{grid-template-columns:1fr}}
+.armor-card{text-align:left;font:inherit;color:var(--ink);background:var(--paper-hi);border:1px solid var(--rule);border-top:4px solid var(--c);padding:12px 14px;cursor:pointer;display:flex;flex-direction:column;gap:6px;min-width:0}
+.armor-card:hover{border-color:var(--rule-strong);border-top-color:var(--c)}
+.armor-card[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink);border-top-color:var(--c)}
+.armor-card .an{font-family:var(--f-display);font-weight:700;font-size:15px;letter-spacing:.03em}
+.armor-card .ad{font-size:14px;line-height:1.45}
+.armor-card .ac{font-family:var(--f-display);font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
+.big-stats{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--rule);margin-top:10px}
+.big-stats>div{flex:1;min-width:110px;padding:10px 14px;border-right:1px solid var(--rule)}
+.big-stats>div:last-child{border-right:none}
+
+/* PRAXIS / EMPTY */
+.empty-card{border:1px dashed var(--rule-strong);padding:20px;text-align:center;background:rgba(247,242,228,.6)}
+.empty-card .t{font-family:var(--f-display);font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.empty-card p{font-size:14.5px;color:var(--ink-soft);max-width:56ch;margin:0 auto}
+
+/* CAST REFERENCE */
+.step{display:grid;grid-template-columns:40px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--rule)}
+.step:last-child{border-bottom:none}
+.step>div{min-width:0}
+.step-n{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--f-display);font-weight:700;font-size:15px}
+.step-t{font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.04em;margin-bottom:4px}
+.step-b{font-size:15px;color:var(--ink-soft);line-height:1.6}
+.step-b b{color:var(--ink);font-weight:600}
+.tbl-wrap{overflow-x:auto;margin-top:8px}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+th{font-family:var(--f-display);font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);text-align:left;padding:6px 8px;border-bottom:1px solid var(--rule-strong);white-space:nowrap}
+td{padding:5px 8px;border-bottom:1px solid var(--rule);color:var(--ink-soft);vertical-align:top}
+td:first-child{color:var(--ink)}
+tr:last-child td{border-bottom:none}
+td.z{color:var(--ok)} td.m{color:var(--warn)} td.h{color:var(--blood)}
+.methods{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+@media(max-width:620px){.methods{grid-template-columns:1fr}}
+.method{border:1px solid var(--rule);padding:10px 12px;background:var(--paper-hi);font-size:14px;color:var(--ink-soft);line-height:1.5}
+.method .t{font-family:var(--f-display);font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin-bottom:4px}
+.method b{color:var(--ink)}
+
+/* NIMBUS */
+.nimbus{background:var(--paper-hi);border:1px solid var(--rule);padding:22px 22px 18px;position:relative;overflow:hidden}
+.nimbus .kanji{position:absolute;right:14px;top:6px;font-family:var(--f-kanji);font-weight:800;font-size:96px;line-height:1;opacity:.08;pointer-events:none}
+.eyebrow{font-family:var(--f-display);font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft)}
+.nim-title{font-family:var(--f-display);font-weight:700;font-size:24px;letter-spacing:.03em;margin:4px 0 2px;text-wrap:balance}
+.nim-sub{font-style:italic;color:var(--ink-soft);margin-bottom:16px}
+.nim-part{padding:14px 0;border-top:1px solid var(--rule)}
+.nim-part .label{margin-bottom:6px;display:block}
+.nim-part p{font-size:16px;line-height:1.75;max-width:66ch}
+.nim-part p+p{margin-top:10px}
+.scent{display:inline-block;margin-top:10px;font-style:italic;font-size:14px;color:var(--ink-soft);padding:4px 10px;border:1px solid var(--rule)}
+.tilt-box{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 10px}
+.tilt{font-family:var(--f-display);font-weight:600;font-size:13px;padding:6px 14px;border:1px solid var(--ink);display:flex;align-items:center;gap:8px}
+.tilt b{font-size:18px}
+.tilt.locked{border-style:dashed;border-color:var(--rule-strong);color:var(--ink-faint)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<svg id="grain" aria-hidden="true">
+  <defs><filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.68 0.52" numOctaves="4" seed="7" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0.42  0 0 0 0 0.3  0 0 0 0 0.1  0 0 0 0.06 0"/></filter></defs>
+  <rect width="100%" height="100%" filter="url(#g)"/>
+</svg>
+<div class="watermark" aria-hidden="true">間</div>
+
+<header>
+  <div class="head-inner">
+    <div class="id-row">
+      <div>
+        <div class="name">Renji<small>Reiki</small></div>
+        <div class="lineage">Renji Nomura · Obrimos · Adamantine Arrow · Talon · Fortitude / Glumness</div>
+      </div>
+      <div class="vitals-mini" aria-label="Quick status">
+        <span class="vm">Gnosis <b>1</b></span>
+        <span class="vm">Wisdom <b>7</b></span>
+        <span class="vm">Mana <b id="hdr-mana">10</b>/10</span>
+        <span class="vm">WP <b id="hdr-wp">–</b></span>
+        <span class="vm" id="hdr-wound-wrap">Wounds <b id="hdr-wound">0</b></span>
+      </div>
+    </div>
+    <nav role="tablist" aria-label="Sections">
+      <button class="tab" role="tab" id="tab-sheet" aria-controls="p-sheet" aria-selected="true" data-tab="sheet">Sheet</button>
+      <button class="tab" role="tab" id="tab-spells" aria-controls="p-spells" aria-selected="false" data-tab="spells">Spells</button>
+      <button class="tab" role="tab" id="tab-cast" aria-controls="p-cast" aria-selected="false" data-tab="cast">How to Cast</button>
+      <button class="tab" role="tab" id="tab-attain" aria-controls="p-attain" aria-selected="false" data-tab="attain">Attainments</button>
+      <button class="tab" role="tab" id="tab-nimbus" aria-controls="p-nimbus" aria-selected="false" data-tab="nimbus">Nimbus</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ SHEET ============ -->
+<section class="panel" id="p-sheet" role="tabpanel" aria-labelledby="tab-sheet">
+
+  <div class="sec">
+    <div class="sec-h">Attributes <span class="aside">tap a dot to change</span></div>
+    <div class="attr-grid" id="attrs"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">Traits <span class="aside">editable, saved in this browser</span></div>
+    <div class="grid3">
+      <label class="stat"><input type="number" min="0" max="20" id="st-health" placeholder="–" inputmode="numeric"><span class="label">Health</span><span class="formula">Stamina + 5</span></label>
+      <label class="stat"><input type="number" min="0" max="20" id="st-wp" placeholder="–" inputmode="numeric"><span class="label">Willpower</span><span class="formula">Resolve + Composure</span></label>
+      <label class="stat"><input type="number" min="0" max="30" id="st-speed" placeholder="–" inputmode="numeric"><span class="label">Speed</span><span class="formula">Str + Dex + 5</span></label>
+      <label class="stat"><input type="number" min="0" max="20" id="st-def" placeholder="–" inputmode="numeric"><span class="label">Defense</span><span class="formula">lower of Wits/Dex + Athletics</span></label>
+      <label class="stat"><input type="number" min="0" max="20" id="st-init" placeholder="–" inputmode="numeric"><span class="label">Initiative</span><span class="formula">Dex + Composure</span></label>
+      <div class="stat"><span class="track-val" style="font-size:24px">5</span><span class="label">Size</span><span class="formula">Armor: Kevlar vest 1/3</span></div>
+    </div>
+    <div class="mini-btns"><button class="btn ghost" id="recalc">Recalculate from attributes</button></div>
+    <p class="hint" id="recalc-hint">By the book: Health 9, Willpower 6, Speed 10, Defense 4, Initiative 4.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="folio">
+      <div class="track-head"><span class="label">Health</span><span class="track-val" id="wound-label">–</span></div>
+      <div class="boxes pen" id="health-track"></div>
+      <p class="hint" style="margin-top:8px" id="health-hint">Tap a box to cycle: empty, bashing /, lethal X, aggravated ✱.</p>
+      <div class="mini-btns"><button class="btn ghost" id="health-clear">Heal all</button></div>
+    </div>
+    <div class="folio">
+      <div class="track-head"><span class="label">Willpower</span><span class="track-val" id="wp-label">–</span></div>
+      <div class="dots" id="wp-track"></div>
+      <p class="hint" style="margin-top:8px" id="wp-hint">Spend 1 for +3 dice, or +2 Defense/Resistance.</p>
+      <div class="mini-btns"><button class="btn ghost" id="wp-reset">Refill</button></div>
+    </div>
+  </div>
+
+  <div class="folio">
+    <div class="track-head"><span class="label">Mana</span><span class="track-val"><b id="mana-count">10</b> <span>/ 10 · spend 1 per turn</span></span></div>
+    <div class="dots" id="mana-track"></div>
+    <div class="mini-btns">
+      <button class="btn" id="mana-minus">Spend 1</button>
+      <button class="btn" id="mana-plus">Regain 1</button>
+      <button class="btn ghost" id="mana-reset">Refill</button>
+    </div>
+    <p class="hint" style="margin-top:8px">Regain: Oblation at his Hallow ●● (Gnosis + Composure) · Scouring your Pattern · Exceptional success can refund a spell's Mana +1.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="folio">
+      <div class="track-head"><span class="label">Wisdom</span><span class="track-val">7 <span>/ 10 · Understanding</span></span></div>
+      <div class="dots" id="wis-pips" style="gap:5px"></div>
+      <p class="hint" style="margin-top:10px">Contain Paradox: roll <b>Wisdom (7)</b>. Each success cancels one Paradox success and deals 1 resistant Bashing. Leftover successes become a Paradox Condition.</p>
+    </div>
+    <div class="folio">
+      <div class="track-head"><span class="label">Active Spells</span><span class="track-val" id="slot-label">0 <span>/ 1 slot</span></span></div>
+      <div id="slots"></div>
+      <div class="mini-btns"><button class="btn ghost" id="slot-add">+ Add spell</button></div>
+      <p class="hint" style="margin-top:8px">Gnosis 1 = 1 slot. Casting with no free slot costs +1 Reach per spell already over. Cancel any of your spells reflexively.</p>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="folio" style="border-left:4px solid var(--ink)">
+      <div class="label">Virtue</div>
+      <div class="spell-name" style="margin:2px 0 4px">Fortitude</div>
+      <p style="font-size:15px">Strength of mind that enables one to endure adversity with courage.</p>
+      <p class="hint" style="margin-top:6px">Acting on it at real cost: regain <b>all</b> Willpower (once per chapter).</p>
+    </div>
+    <div class="folio" style="border-left:4px solid var(--ink-faint)">
+      <div class="label">Vice</div>
+      <div class="spell-name" style="margin:2px 0 4px">Glumness</div>
+      <p style="font-size:15px">Quietly melancholic or miserable; gloomy, ill-tempered.</p>
+      <p class="hint" style="margin-top:6px">Indulging it: regain <b>1</b> Willpower (once per scene).</p>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">Conditions &amp; Notes</div>
+    <textarea id="notes" placeholder="Conditions, Tilts, Beats, things the ST said… (saved)"></textarea>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">Arcana</div>
+    <div id="arcana"></div>
+    <div class="note" id="arc-note"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">Skills <span class="aside">dots feed the Mudra in the spell planner</span></div>
+    <div class="folio"><div class="skill-cols" id="skills"></div></div>
+    <p class="hint">Rote Skills marked on Roll20: Athletics, Empathy, Intimidation. (Adamantine Arrow's book list is Athletics, Intimidation, Medicine.)</p>
+  </div>
+
+  <div class="grid2">
+    <div class="sec">
+      <div class="sec-h">Combat</div>
+      <div class="folio" id="combat"></div>
+    </div>
+    <div class="sec">
+      <div class="sec-h">Merits &amp; Flaws</div>
+      <div class="folio">
+        <div class="merit-h">Combat</div>
+        <div class="merit"><span>Guardian Training <small>Style merit</small></span><span class="d">●●●●●</span></div>
+        <div class="merit"><span>Quick Draw</span><span class="d">●<i>●●●●</i></span></div>
+        <div class="merit-h">Utility</div>
+        <div class="merit"><span>Quick Healer</span><span class="d">●●●●</span></div>
+        <div class="merit"><span>Iron Chin</span><span class="d">●●●●</span></div>
+        <div class="merit"><span>Striking Looks</span><span class="d">●●<i>●●</i></span></div>
+        <div class="merit-h">Resources</div>
+        <div class="merit"><span>Mentor</span><span class="d">●●●<i>●●</i></span></div>
+        <div class="merit"><span>Hallow</span><span class="d">●●<i>●●●</i></span></div>
+        <div class="merit"><span>Piggy Bank</span><span class="d">●</span></div>
+        <div class="merit-h">Other</div>
+        <div class="merit"><span>Area of Expertise <small>Weaponry</small></span><span class="d">●</span></div>
+        <div class="merit-h">Flaws</div>
+        <div class="merit flaw"><span>Bad Police Records <small>No fixed mechanic; the ST plays it out in game.</small></span><span class="d">●●</span></div>
+        <div class="merit flaw"><span>Low Self-Image <small><b>−3 to all skill rolls</b> when Renji believes the odds are against him or others expect him to fail (ST's call), on top of normal modifiers.</small></span><span class="d">●●</span></div>
+        <div class="merit flaw"><span>Colorblindness <small>Sees no color at all. <b>−2</b> on rolls that depend on telling colors apart (wires, liveries, signals, the red button).</small></span><span class="d">●</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">Tools</div>
+    <div class="note"><b>Dedicated Tool: the family katana.</b> Obrimos Path tools are steel, petrified wood, gold, perfected materials, double-edged swords, spears and noble weapons, so the katana works as a +1 Yantra and, as Dedicated Tool, takes −2 off any Paradox pool.</div>
+  </div>
+</section>
+
+<!-- ============ SPELLS ============ -->
+<section class="panel" id="p-spells" role="tabpanel" aria-labelledby="tab-spells" hidden>
+  <div class="note">Rote pool: <b>Gnosis 1 + Arcanum + Mudra (Rote Skill)</b>. Free Reach on a rote = <b>6 − spell level</b>, since a rote counts your Arcanum as 5. Open <b>Plan this cast</b> on any card to get the dice, Reach, Paradox and Mana before you roll.</div>
+
+  <div class="sec">
+    <div class="sec-h">Rotes</div>
+    <div id="spell-list" style="display:flex;flex-direction:column;gap:14px"></div>
+    <p class="hint">6 rote dots: Acceleration ●●● + Find the Balance ●● + Coaxing the Spirits ●.</p>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">Praxis</div>
+    <div class="empty-card">
+      <div class="t">Praxis · to be chosen</div>
+      <p>One Praxis per dot of Gnosis. Pool is Gnosis + Arcanum with no Mudra, but <b>3 successes is Exceptional</b> and it never pays the Common Arcanum Mana. Which spell is Renji at his core?</p>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">Improvised favorites</div>
+    <p class="hint">No Mudra on improvised spells. Free Reach = Arcanum − level + 1. +1 Mana if the Arcanum isn't Ruling.</p>
+    <div class="grid2">
+      <div class="folio" style="border-left:4px solid var(--time)">
+        <div class="spell-title"><span class="spell-name" style="font-size:16px">Perfect Timing</span><span class="spell-arc" style="color:var(--time)">Time ●</span></div>
+        <p style="font-size:14.5px;margin-top:6px">Spend a turn still and without Defense planning; the next mundane instant action gets <b>+Potency</b> dice. Potency 3 is free.</p>
+        <p class="hint" style="margin-top:6px"><b>4 dice</b> · 3 free Reach · primary Duration (3 turns free)</p>
+      </div>
+      <div class="folio" style="border-left:4px solid var(--spirit)">
+        <div class="spell-title"><span class="spell-name" style="font-size:16px">Exorcist's Eye</span><span class="spell-arc" style="color:var(--spirit)">Spirit ●</span></div>
+        <p style="font-size:14.5px;margin-top:6px">See and speak with spirits in Twilight, objects and hosts. +1 Reach to look across the Gauntlet (Withstood by its Strength).</p>
+        <p class="hint" style="margin-top:6px"><b>3 dice</b> · 2 free Reach · primary Duration (2 turns free)</p>
+      </div>
+    </div>
+    <p class="hint">Mana shown assumes Time and Spirit are Ruling. Spirit Eyes (Attainments tab) already shows spirits in Spirit Sight without a spell.</p>
+  </div>
+</section>
+
+<!-- ============ HOW TO CAST ============ -->
+<section class="panel" id="p-cast" role="tabpanel" aria-labelledby="tab-cast" hidden>
+  <div class="note">At Gnosis 1: <b>Ritual interval 3 hours</b> · <b>2 Yantras max</b> · <b>1 Paradox die per Reach over free</b> · <b>1 Mana per turn</b> · <b>1 spell control slot</b>.</div>
+
+  <div class="sec">
+    <div class="sec-h">Step by step</div>
+    <div>
+      <div class="step"><div class="step-n">1</div><div><div class="step-t">Choose the spell</div><div class="step-b">You need every Arcanum at the listed level. Renji reaches <b>Time ●●●</b>, <b>Spirit ●●</b>, <b>Matter ●●</b>. Base pool is Gnosis + the highest Arcanum in the spell.</div></div></div>
+
+      <div class="step"><div class="step-n">2</div><div><div class="step-t">Choose how you cast it</div>
+        <div class="methods">
+          <div class="method"><div class="t">Rote</div>Gnosis + Arcanum + <b>Mudra</b> (Rote Skill dots)<br>Free Reach: <b>6 − level</b><br>No Common/Inferior Mana</div>
+          <div class="method"><div class="t">Praxis</div>Gnosis + Arcanum<br>Free Reach: Arcanum − level + 1<br><b>Exceptional on 3</b> · no Common Mana</div>
+          <div class="method"><div class="t">Improvised</div>Gnosis + Arcanum<br>Free Reach: Arcanum − level + 1<br><b>+1 Mana</b> if the Arcanum isn't Ruling</div>
+        </div>
+      </div></div>
+
+      <div class="step"><div class="step-n">3</div><div><div class="step-t">Free Reach for Renji</div><div class="step-b">
+        <div class="tbl-wrap"><table>
+          <tr><th>Spell level</th><th style="color:var(--time)">Time 3</th><th style="color:var(--spirit)">Spirit 2</th><th style="color:var(--matter)">Matter 2</th><th>As a Rote</th></tr>
+          <tr><td>●</td><td>3</td><td>2</td><td>2</td><td>5</td></tr>
+          <tr><td>●●</td><td>2</td><td>1</td><td>1</td><td>4</td></tr>
+          <tr><td>●●●</td><td>1</td><td>–</td><td>–</td><td>3</td></tr>
+        </table></div>
+        <div class="note time" style="margin-top:10px"><b>One Reach each:</b> Ritual → Instant · change primary factor · Standard → Advanced (Potency, Duration or Scale) · Indefinite Duration (+1 Mana) · Touch → Sensory · Sensory → remote viewing · cast with no free slot (+1 per spell already over).</div>
+      </div></div></div>
+
+      <div class="step"><div class="step-n">4</div><div><div class="step-t">Spell factors</div><div class="step-b">
+        Each factor starts at its basic level. The <b>primary factor</b> is free up to your Arcanum dots: Time 3 gives Potency 3 or the third Duration step at no penalty.
+        <div class="grid2" style="margin-top:10px">
+          <div class="tbl-wrap"><table>
+            <tr><th>Standard Duration</th><th>Dice</th></tr>
+            <tr><td>1 turn</td><td class="z">0</td></tr><tr><td>2 turns</td><td class="m">−2</td></tr><tr><td>3 turns</td><td class="m">−4</td></tr><tr><td>5 turns</td><td class="m">−6</td></tr><tr><td>10 turns</td><td class="h">−8</td></tr><tr><td>+10 turns</td><td class="h">−2 more</td></tr>
+          </table></div>
+          <div class="tbl-wrap"><table>
+            <tr><th>Advanced Duration · 1 Reach</th><th>Dice</th></tr>
+            <tr><td>1 scene / hour</td><td class="z">0</td></tr><tr><td>1 day</td><td class="m">−2</td></tr><tr><td>1 week</td><td class="m">−4</td></tr><tr><td>1 month</td><td class="m">−6</td></tr><tr><td>1 year</td><td class="h">−8</td></tr><tr><td>Indefinite</td><td class="h">−10 · +1 Reach, 1 Mana</td></tr>
+          </table></div>
+          <div class="tbl-wrap"><table>
+            <tr><th>Potency</th><th>Dice</th></tr>
+            <tr><td>1</td><td class="z">0</td></tr><tr><td>2</td><td class="m">−2</td></tr><tr><td>3</td><td class="m">−4</td></tr><tr><td>4</td><td class="h">−6</td></tr><tr><td>5</td><td class="h">−8</td></tr>
+          </table>
+          <p class="hint" style="margin-top:6px">Advanced Potency (1 Reach): same penalties, +2 to withstand Dispel.</p></div>
+          <div class="tbl-wrap"><table>
+            <tr><th>Scale · Standard / Advanced</th><th>Dice</th></tr>
+            <tr><td>1 subject, Size 5 / 5 subjects, Size 5</td><td class="z">0</td></tr>
+            <tr><td>2, Size 6 / 10, Size 10</td><td class="m">−2</td></tr>
+            <tr><td>4, Size 7 / 20, Size 15</td><td class="m">−4</td></tr>
+            <tr><td>8, Size 8 / 40, Size 20</td><td class="h">−6</td></tr>
+            <tr><td>16, Size 9 / 80, Size 25</td><td class="h">−8</td></tr>
+          </table></div>
+        </div>
+      </div></div></div>
+
+      <div class="step"><div class="step-n">5</div><div><div class="step-t">Yantras · max 2, net bonus caps at +5</div><div class="step-b">
+        Instant casting: only <b>one</b> Yantra is reflexive; each extra adds a turn. Ritual casting: +1 die per extra ritual interval spent, max +5.
+        <div class="tbl-wrap"><table>
+          <tr><th>Yantra</th><th>Bonus</th><th>Note</th></tr>
+          <tr><td>Mudra</td><td class="z">+Skill dots</td><td>Rotes only</td></tr>
+          <tr><td>Concentration</td><td class="z">+2</td><td>Damage or a non-reflexive action ends the spell</td></tr>
+          <tr><td>Mantra (High Speech)</td><td class="z">+2</td><td>Never reflexive</td></tr>
+          <tr><td>Runes</td><td class="z">+2</td><td>Breaking the runes ends the spell</td></tr>
+          <tr><td>Order Tool · the katana</td><td class="z">+1</td><td>As Dedicated Tool also <b>−2 Paradox</b></td></tr>
+          <tr><td>Environment</td><td class="z">+1</td><td>—</td></tr>
+          <tr><td>Demesne · Supernal Verge</td><td class="z">+2</td><td>If you're standing in one</td></tr>
+          <tr><td>Sympathy · Sacrament</td><td class="z">+0–2</td><td>Sympathetic links, offerings</td></tr>
+        </table></div>
+      </div></div></div>
+
+      <div class="step"><div class="step-n">6</div><div><div class="step-t">Check the pool</div><div class="step-b">
+        <b>Gnosis + Arcanum (+ Mudra) + Yantras − factor penalties</b><br>
+        1 or more: roll it · 0 to −5: chance die · −6 or worse: the spell is too complex and fails.
+      </div></div></div>
+
+      <div class="step"><div class="step-n">7</div><div><div class="step-t">Pay Mana</div><div class="step-b">
+        Spell cost (Acceleration: 1) · improvised non-Ruling Arcanum: 1 · Indefinite: 1 · Permanence: 1 · Mage Armor: 1 per scene · each point of Paradox mitigation: 1. Above 1 Mana per turn, an instant spell takes extra turns (or spend it in the turns before).
+      </div></div></div>
+
+      <div class="step"><div class="step-n">8</div><div><div class="step-t">Paradox · only if you Reached past free</div><div class="step-b">
+        <div class="note blood">
+          <b>Pool:</b> 1 die per Reach over free · +1 per earlier Paradox roll this scene · +1 if Sleepers see obvious magic · −2 using the katana · −1 per Mana spent. Once a die is added, a Paradox is always checked: if modifiers zero it out, roll a chance die. Several Sleepers: 9-again, a large group: 8-again, a crowd: rote quality.<br><br>
+          <b>Decide first, then roll.</b><br>
+          <b>Contain:</b> roll Wisdom 7, each success cancels one Paradox success for 1 resistant Bashing. Leftover successes: Paradox Condition, spell not penalized.<br>
+          <b>Release:</b> Paradox successes become a dice penalty to the casting and Reach for the Abyss: 1 undo/apply a Reach or impose a Paradox Condition · 2 change the subject · 3 Abyssal Tilt · 5 Rank 2 entity.
+        </div>
+      </div></div></div>
+
+      <div class="step"><div class="step-n">9</div><div><div class="step-t">Roll and resolve</div><div class="step-b">
+        <div class="tbl-wrap"><table>
+          <tr><th>Result</th><th>Effect</th></tr>
+          <tr><td style="color:var(--blood)">Dramatic Failure</td><td>Fails; you gain a Condition tied to the intended effect (and a Paradox Condition if a Paradox was released).</td></tr>
+          <tr><td>Failure</td><td>The magic doesn't take.</td></tr>
+          <tr><td style="color:var(--ok)">Success</td><td>Works as you specified.</td></tr>
+          <tr><td><b>Exceptional</b> · 5, or 3 on a Praxis</td><td>Regain 1 Willpower and pick one: +1 step in the primary factor · a free Reach in the primary factor · a Condition that pays Arcane Beats · refund all Mana +1 · ignore Withstand.</td></tr>
+        </table></div>
+      </div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NIMBUS ============ -->
+<section class="panel" id="p-attain" role="tabpanel" aria-labelledby="tab-attain" hidden>
+  <div class="sec">
+    <div class="sec-h">Mage Armor <span class="aside">1 Mana · lasts the scene · one at a time</span></div>
+    <div class="note">Activate for <b>1 Mana</b>; it stays up for the scene even if Renji is knocked out (not if he dies). Only one Armor at a time; switching Arcanum is reflexive and costs another Mana.</div>
+    <div class="armor-grid" id="armor-grid"></div>
+    <div class="folio" id="armor-status"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">Counterspell <span class="aside">one-dot Attainment, per Arcanum</span></div>
+    <div class="folio">
+      <p style="font-size:15px">Unravel an enemy spell while it's being cast. Requires seeing it in <b>Active Mage Sight</b> of that Arcanum; works in combat out of Initiative order if Renji hasn't acted yet. Instant action, Clash of Wills (Gnosis + Arcanum vs. caster's Gnosis + Arcanum). Always targets the spell's highest Arcanum. <b>+1 Mana</b> if the caster has more dots in it.</p>
+      <div class="tbl-wrap"><table>
+        <tr><th>Counter</th><th>Pool</th><th>Stops spells whose top Arcanum is…</th></tr>
+        <tr><td style="color:var(--time)">Time</td><td>4</td><td>Time</td></tr>
+        <tr><td style="color:var(--spirit)">Spirit</td><td>3</td><td>Spirit</td></tr>
+        <tr><td style="color:var(--matter)">Matter</td><td>3</td><td>Matter</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">Lesser Utilities <span class="aside">two-dot Attainments</span></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="folio" style="border-left:4px solid var(--time)">
+        <div class="spell-title"><span class="spell-name" style="font-size:16px">Temporal Sympathy</span><span class="spell-arc" style="color:var(--time)">Time ●●</span></div>
+        <p style="font-size:15px;margin-top:6px">Cast a spell at a subject's <b>past</b>. The spell targets the subject as it exists now, at sensory range, with a sympathy Yantra, for <b>1 Mana</b>. Withstood by the strength of temporal sympathy, +1 if he doesn't know the subject's sympathetic name. Can combine with Sympathetic Range by paying for both.</p>
+      </div>
+      <div class="folio" style="border-left:4px solid var(--spirit)">
+        <div class="spell-title"><span class="spell-name" style="font-size:16px">Spirit Eyes</span><span class="spell-arc" style="color:var(--spirit)">Spirit ●●</span></div>
+        <p style="font-size:15px;margin-top:6px">Peripheral Mage Sight reacts to spirits even when they're passive; Active Spirit Sight sees spirits and projecting beings in Twilight automatically (hiding powers force a Clash of Wills). <b>1 Mana</b>: speak with, touch and strike spirits for a scene, and they can reach him too.</p>
+      </div>
+      <div class="folio" style="border-left:4px solid var(--matter)">
+        <div class="spell-title"><span class="spell-name" style="font-size:16px">Permanence</span><span class="spell-arc" style="color:var(--matter)">Matter ●●</span></div>
+        <p style="font-size:15px;margin-top:6px">For a spell with Matter as its highest Arcanum, pay <b>1 Mana instead of a Reach</b> for Advanced Duration. Saves Reach on Find the Balance; toggle it in that spell's planner.</p>
+      </div>
+      <div class="folio" style="border-left:4px solid var(--time)">
+        <div class="spell-title"><span class="spell-name" style="font-size:16px">Targeted Summoning</span><span class="spell-arc" style="color:var(--time)">Time ●●●</span></div>
+        <p style="font-size:15px;margin-top:6px">Three-dot Attainment. When summoning a Supernal being, spend <b>1 extra Mana</b> to name a second Arcanum it must have. The primary Arcanum must be one of his Ruling Arcana.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="p-nimbus" role="tabpanel" aria-labelledby="tab-nimbus" hidden>
+  <div class="nimbus">
+    <div class="kanji" aria-hidden="true">墨</div>
+    <div class="eyebrow">Nimbus · The Ink that Slows</div>
+    <h1 class="nim-title">Time that Breathes</h1>
+    <p class="nim-sub">How the world feels Reiki's presence</p>
+
+    <div class="nim-part">
+      <span class="label">Long-Term Nimbus</span>
+      <p>The reality around Renji gently resists the world's rush. Digital clocks lose seconds without explanation. Machines that should have broken weeks ago still run. People who spend time with him report, without quite being able to say why, that they felt less urgency that day. Children settle. Conversations slow down, become more honest.</p>
+      <p>In the Chainwork, where rhythm is measured in biometrics and productivity per hour, this registers in the systems as a minor statistical anomaly. Not enough to trigger an alert. Just enough to be <em>strange</em>.</p>
+    </div>
+
+    <div class="nim-part">
+      <span class="label">Immediate Nimbus · Brushstroke in the Air</span>
+      <p>When Renji casts magic, the air around him behaves like ink in water. Dark, fluid traces appear suspended: not smoke, not light, but something carrying the presence and intent of calligraphy. Those with Mage Sight see characters that almost form words before dissolving. Those without sense something else: the city's frantic rhythm simply… stops pressing for a moment.</p>
+      <span class="scent">The smell of wet sumi ink and old rice paper</span>
+    </div>
+
+    <div class="nim-part">
+      <span class="label">Signature Nimbus · The Ink Trail</span>
+      <p>What he touches with magic is marked with invisible traces, perceptible only through Mage Sight, like brushstrokes of ink that dried in the air. Places where he worked carry a residual quality of stillness, like the silence after someone finishes writing something important.</p>
+    </div>
+
+    <div class="nim-part">
+      <span class="label">Nimbus Tilt · The Brush's Stillness</span>
+      <div class="tilt-box">
+        <div class="tilt"><b>+1</b> Composure</div>
+        <div class="tilt locked"><b>+1</b> Wits · at Gnosis 3</div>
+      </div>
+      <p style="font-style:italic;color:var(--ink-soft)">When the Nimbus surfaces, urgency around it dissolves. The world doesn't stop, it simply becomes bearable for a moment. The stillness taught by Fumiko spreads beyond him; when time loosens, you see more.</p>
+    </div>
+
+    <div class="nim-part">
+      <span class="label">How a flare works</span>
+      <p style="font-size:15px">Tilt dice = <b>half Gnosis, rounded up</b>, so 1 now, 2 at Gnosis 3. A spell's flare uses its <b>Potency</b> as Nimbus strength and lasts its Reach in turns (minimum 1). Once per scene you can force a flare for 1 Mana: roll Gnosis, successes are the strength, visible even to people without Mage Sight. The Tilt lands on anyone whose <b>Resolve is equal to or below</b> the strength.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+(function(){
+const GNOSIS=1, MANA_MAX=10, WISDOM=7, SLOTS=1;
+const ARC={Time:3,Spirit:2,Matter:2};
+const ARC_C={Time:'var(--time)',Spirit:'var(--spirit)',Matter:'var(--matter)'};
+const ARC_T={Time:'time',Spirit:'spirit',Matter:'matter'};
+const RANK=['','Initiate','Apprentice','Disciple','Adept','Master'];
+const ORDER_SKILLS=['Athletics','Empathy','Intimidation']; /* Rote Skills as marked on Roll20 */
+const ATTR_ROWS=[['Power','Intelligence','Strength','Presence'],['Finesse','Wits','Dexterity','Manipulation'],['Resistance','Resolve','Stamina','Composure']];
+const ATTR_DEF={Intelligence:1,Wits:2,Resolve:3,Strength:4,Dexterity:1,Stamina:4,Presence:3,Manipulation:1,Composure:3};
+const SKILL_GROUPS=[
+ ['Mental','−3 unskilled',['Academics','Computer','Crafts','Investigation','Medicine','Occult','Politics','Science']],
+ ['Physical','−1 unskilled',['Athletics','Brawl','Drive','Firearms','Larceny','Stealth','Survival','Weaponry']],
+ ['Social','−1 unskilled',['Animal Ken','Empathy','Expression','Intimidation','Persuasion','Socialize','Streetwise','Subterfuge']]];
+const SKILL_DEF={Crafts:2,Occult:3,Athletics:3,Brawl:3,Drive:2,Weaponry:3,'Animal Ken':1,Empathy:3,Intimidation:3};
+const SPECS={Weaponry:'Katana (+2)',Intimidation:'Menace',Brawl:'Grapple'};
+const KEY='renji-playaid-v6';
+
+/* ---------- storage ---------- */
+let S={};
+try{S=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){S={}}
+S.stats=S.stats||{};S.skills=S.skills||{};S.health=S.health||[];S.slots=S.slots||[''];S.plans=S.plans||{};
+S.attrs=S.attrs||{};
+for(const k in ATTR_DEF)if(S.attrs[k]===undefined)S.attrs[k]=ATTR_DEF[k];
+if(!S.seeded7){for(const k in SKILL_DEF)if(!S.skills[k])S.skills[k]=SKILL_DEF[k];S.seeded7=true}
+if(!Array.isArray(S.ruling))S.ruling=['Time','Spirit'];
+const A=k=>S.attrs[k]||0, SK=k=>S.skills[k]||0;
+const RAW=()=>({health:A('Stamina')+5,wp:A('Resolve')+A('Composure'),speed:A('Strength')+A('Dexterity')+5,def:Math.min(A('Wits'),A('Dexterity'))+SK('Athletics'),init:A('Dexterity')+A('Composure')});
+if(!S.stats.seeded){const r=RAW();for(const k in r)if(S.stats[k]===undefined||S.stats[k]==='')S.stats[k]=String(r[k]);S.stats.seeded=true}
+if(!S.dexFix){S.attrs.Dexterity=1;const r=RAW();S.stats.speed=String(r.speed);S.stats.def=String(r.def);S.stats.init=String(r.init);S.dexFix=true}
+if(S.plans.dispel)delete S.plans.dispel;
+if(typeof S.mana!=='number')S.mana=MANA_MAX;
+if(typeof S.wpSpent!=='number')S.wpSpent=0;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const $=id=>document.getElementById(id);
+
+/* ---------- tabs ---------- */
+const tabs=[...document.querySelectorAll('.tab')];
+function showTab(name){
+  tabs.forEach(t=>{const on=t.dataset.tab===name;t.setAttribute('aria-selected',on);$('p-'+t.dataset.tab).hidden=!on});
+  S.tab=name;save();window.scrollTo({top:0});
+}
+tabs.forEach(t=>t.addEventListener('click',()=>showTab(t.dataset.tab)));
+const hash=(location.hash||'').slice(1);
+showTab(['sheet','spells','cast','attain','nimbus'].includes(hash)?hash:(S.tab||'sheet'));
+
+/* ---------- stats ---------- */
+const STAT_IDS={health:'st-health',wp:'st-wp',speed:'st-speed',def:'st-def',init:'st-init'};
+function fillStats(){Object.entries(STAT_IDS).forEach(([k,id])=>{$(id).value=S.stats[k]!==undefined?S.stats[k]:''})}
+fillStats();
+Object.entries(STAT_IDS).forEach(([k,id])=>{
+  const el=$(id);
+  el.addEventListener('input',()=>{S.stats[k]=el.value;save();renderHealth();renderWP();renderCombat();renderPlanners()});
+});
+function updateRawHint(){const r=RAW();$('recalc-hint').textContent='By the book: Health '+r.health+', Willpower '+r.wp+', Speed '+r.speed+', Defense '+r.def+', Initiative '+r.init+'.'}
+$('recalc').addEventListener('click',()=>{const r=RAW();for(const k in r)S.stats[k]=String(r[k]);save();fillStats();renderHealth();renderWP();renderCombat();renderPlanners()});
+
+/* ---------- attributes ---------- */
+function dotsEl(val,max,label,onSet){
+  const ds=document.createElement('span');ds.className='sdots';
+  for(let i=1;i<=max;i++){const d=document.createElement('button');d.type='button';d.className='sdot'+(i<=val?' on':'');d.setAttribute('aria-label',label+' '+i);
+    d.addEventListener('click',()=>onSet(val===i?i-1:i));ds.appendChild(d)}
+  return ds;
+}
+function renderAttrs(){
+  const g=$('attrs');g.innerHTML='<div class="ch blank"></div><div class="ch">Mental</div><div class="ch">Physical</div><div class="ch">Social</div>';
+  ATTR_ROWS.forEach(row=>{
+    const rh=document.createElement('div');rh.className='rh';rh.textContent=row[0];g.appendChild(rh);
+    row.slice(1).forEach(k=>{
+      const c=document.createElement('div');c.className='attr';c.innerHTML='<span>'+k+'</span>';
+      c.appendChild(dotsEl(A(k),5,k,v=>{S.attrs[k]=v;save();renderAttrs();updateRawHint();renderCombat()}));g.appendChild(c);
+    });
+  });
+}
+
+/* ---------- combat ---------- */
+function renderCombat(){
+  const str=A('Strength'),kat=str+SK('Weaponry')+(SK('Weaponry')?2:0),un=str+SK('Brawl');
+  const init=num('init');
+  $('combat').innerHTML=
+   '<div class="combat-row"><span><b>Katana</b> · Str + Weaponry + Katana spec</span><span class="big">'+kat+'</span><span class="sub">+3 Lethal · Initiative −3'+(init?' (= '+(init-3)+')':'')+' · Str 3 · Size 3 · Quick Draw: draw reflexively</span></div>'+
+   '<div class="combat-row"><span><b>Unarmed</b> · Str + Brawl</span><span class="big">'+un+'</span><span class="sub">+0 Bashing · '+(un+1)+' to grapple (specialty)</span></div>'+
+   '<div class="combat-row"><span><b>Kevlar vest</b> · Armor</span><span class="big">1/3</span><span class="sub">General 1 / Ballistic 3</span></div>'+
+   '<div class="combat-row"><span><b>Defense</b> · Dodge doubles it</span><span class="big">'+(effDef()||'–')+'</span><span class="sub">'+(S.armor==='Time'?'Includes Time Armor +3 · ':'')+'Under Acceleration: (Defense + Potency) × 2 when dodging</span></div>'+
+   '<div class="combat-row"><span><b>Intimidation</b> · Pres + Intim (Menace)</span><span class="big">'+(A('Presence')+SK('Intimidation')+1)+'</span><span class="sub">With the Menace specialty</span></div>';
+}
+
+/* ---------- mage armor ---------- */
+const effDef=()=>num('def')+(S.armor==='Time'?ARC.Time:0);
+const ARMOR={
+  Time:{c:'var(--time)',d:'+'+ARC.Time+' Defense, and Defense works against firearms. After a successful Dodge, 1 Mana: the attacker loses '+ARC.Time+' Initiative for the scene.'},
+  Spirit:{c:'var(--spirit)',d:'Lethal damage from kinetic attacks (bullets, claws, blades) and from ephemeral beings becomes bashing, for '+ARC.Spirit+' wounds.'},
+  Matter:{c:'var(--matter)',d:'General Armor '+ARC.Matter+' against every physical attack, immune to Armor Piercing. Nothing against mental attacks.'}
+};
+function renderArmor(){
+  const g=$('armor-grid');if(!g)return;g.innerHTML='';
+  Object.entries(ARMOR).forEach(([k,v])=>{
+    const b=document.createElement('button');b.type='button';b.className='armor-card';b.style.setProperty('--c',v.c);
+    b.setAttribute('aria-pressed',S.armor===k);
+    b.innerHTML='<span class="ac">'+(S.armor===k?'Active':(S.armor?'Switch · 1 Mana':'Raise · 1 Mana'))+'</span><span class="an">'+k+' Armor</span><span class="ad">'+v.d+'</span>';
+    b.addEventListener('click',()=>{if(S.armor===k)return;if(S.mana<1){$('armor-status').insertAdjacentHTML('afterbegin','<p class="hint" style="color:var(--blood)">No Mana left to raise armor.</p>');return}
+      S.mana-=1;S.armor=k;S.armorUsed=0;save();renderMana();renderArmor();renderCombat();renderPlanners()});
+    g.appendChild(b);
+  });
+  const st=$('armor-status'),df=num('def');
+  if(!S.armor){st.innerHTML='<span class="label">No armor up</span><p class="hint" style="margin-top:4px">Tap an Armor to raise it; 1 Mana comes off the tracker.</p>';return}
+  let body='';
+  if(S.armor==='Time'){const d=df+ARC.Time;body='<div class="big-stats"><div><div class="track-val">'+d+'</div><div class="hint">Defense</div></div><div><div class="track-val">'+d*2+'</div><div class="hint">Dodge</div></div><div><div class="track-val">'+(d+3)*2+'</div><div class="hint">Dodge + Acceleration (Potency 3)</div></div></div><p class="hint" style="margin-top:8px">Defense applies to gunfire. Watch the 1 Mana per turn limit: Armor and Acceleration in the same turn means spreading them over two turns.</p>'}
+  if(S.armor==='Spirit'){const used=S.armorUsed||0;body='<p style="margin-top:6px">Downgrades used this scene:</p><div class="dots" id="armor-used" style="margin-top:6px"></div>'+'<p class="hint" style="margin-top:8px">Tap a dot each time a lethal hit is turned into bashing. '+(ARC.Spirit-used)+' left.</p>'}
+  if(S.armor==='Matter'){body='<div class="big-stats"><div><div class="track-val">'+ARC.Matter+'</div><div class="hint">General Armor</div></div><div><div class="track-val">1/3</div><div class="hint">Kevlar vest</div></div></div><p class="hint" style="margin-top:8px">Armor from different sources usually doesn\'t add up; check with the ST whether he uses the higher one or stacks them.</p>'}
+  st.innerHTML='<div class="track-head"><span class="label">'+S.armor+' Armor · active this scene</span><button class="btn ghost" type="button" id="armor-end">End scene</button></div>'+body;
+  $('armor-end').addEventListener('click',()=>{S.armor=null;S.armorUsed=0;save();renderArmor();renderCombat();renderPlanners()});
+  const u=$('armor-used');
+  if(u){for(let i=0;i<ARC.Spirit;i++){const d=document.createElement('button');d.type='button';d.className='dot'+(i<(S.armorUsed||0)?'':' spent');d.setAttribute('aria-label','Downgrade '+(i+1));
+    d.addEventListener('click',()=>{S.armorUsed=i<(S.armorUsed||0)?i:i+1;save();renderArmor()});u.appendChild(d)}}
+}
+
+/* ---------- arcana ---------- */
+function renderArcana(){
+  const w=$('arcana');w.innerHTML='';
+  Object.entries(ARC).forEach(([k,v])=>{
+    const r=document.createElement('div');r.className='arc-row';r.style.setProperty('--c',ARC_C[k]);
+    const ruling=S.ruling.includes(k);
+    r.innerHTML='<span class="arc-name">'+k+'</span><span class="arc-dots">'+'●'.repeat(v)+'<i>'+'●'.repeat(5-v)+'</i></span>';
+    const b=document.createElement('button');b.type='button';b.className='tag'+(ruling?' ruling':'');
+    b.textContent=(ruling?'Ruling':'Common')+' · '+RANK[v];b.title='Tap to switch Ruling / Common';
+    b.addEventListener('click',()=>{S.ruling=ruling?S.ruling.filter(x=>x!==k):S.ruling.concat(k);save();renderArcana()});
+    r.appendChild(b);w.appendChild(r);
+  });
+  const inf=document.createElement('div');inf.className='arc-row';inf.style.setProperty('--c','var(--blood)');
+  inf.innerHTML='<span class="arc-name">Mind</span><span class="arc-dots"><i>●●●●●</i></span><span class="tag inferior">Inferior</span>';
+  w.appendChild(inf);
+  const paid=Object.keys(ARC).filter(k=>!S.ruling.includes(k));
+  $('arc-note').innerHTML='Tap the tag to mark an Arcanum as <b>Ruling</b>. Set now: '+(S.ruling.length?'<b>'+S.ruling.join(' and ')+'</b> Ruling':'nothing Ruling')+(paid.length?', so improvising with <b>'+paid.join(' or ')+'</b> costs +1 Mana.':', so improvising never costs extra Mana.')+' <b>Mind</b> is Inferior: improvising with it always costs +1 Mana. Rotes and Praxes never pay this.';
+}
+const num=k=>{const v=parseInt(S.stats[k],10);return isNaN(v)?0:v};
+
+/* ---------- health ---------- */
+const DMG=['','/','X','✱'];
+function renderHealth(){
+  const n=Math.min(20,num('health')),t=$('health-track');t.innerHTML='';
+  S.health=S.health.slice(0,n);while(S.health.length<n)S.health.push(0);
+  // sort: aggravated, lethal, bashing from the left
+  const sorted=[...S.health].sort((a,b)=>b-a);
+  sorted.forEach((d,i)=>{
+    const b=document.createElement('button');b.className='box';b.type='button';
+    b.setAttribute('aria-label','Health box '+(i+1)+(d?' '+['','bashing','lethal','aggravated'][d]:' empty'));
+    b.innerHTML=DMG[d]+(i>=n-3?'<span class="wp">−'+(i-(n-3)+1)+'</span>':'');
+    b.addEventListener('click',()=>{const arr=[...S.health].sort((a,c)=>c-a);arr[i]=(arr[i]+1)%4;S.health=arr;save();renderHealth()});
+    t.appendChild(b);
+  });
+  const filled=S.health.filter(x=>x>0).length;
+  const pen=n?Math.max(0,filled-(n-3)):0;
+  $('wound-label').innerHTML=n?(pen?'−'+pen+' <span>dice</span>':filled+'<span> / '+n+'</span>'):'–';
+  $('hdr-wound').textContent=pen?'−'+pen:filled;
+  $('health-hint').innerHTML=n?'Tap to cycle: bashing /, lethal X, aggravated ✱. Damage stacks worst-first from the left.':'Type <b>Health</b> above to draw the boxes.';
+}
+$('health-clear').addEventListener('click',()=>{S.health=S.health.map(()=>0);save();renderHealth()});
+
+/* ---------- willpower ---------- */
+function renderWP(){
+  const n=Math.min(12,num('wp')),t=$('wp-track');t.innerHTML='';
+  S.wpSpent=Math.min(S.wpSpent,n);
+  for(let i=0;i<n;i++){
+    const d=document.createElement('button');d.type='button';d.className='dot'+(i>=n-S.wpSpent?' spent':'');
+    d.setAttribute('aria-label','Willpower '+(i+1));
+    d.addEventListener('click',()=>{const left=n-S.wpSpent;S.wpSpent=i<left?S.wpSpent+1:S.wpSpent-1;save();renderWP()});
+    t.appendChild(d);
+  }
+  $('wp-label').innerHTML=n?(n-S.wpSpent)+'<span> / '+n+'</span>':'–';
+  $('hdr-wp').textContent=n?(n-S.wpSpent):'–';
+  $('wp-hint').innerHTML=n?'Spend 1 for +3 dice, or +2 to a Resistance or Defense.':'Type <b>Willpower</b> above to draw the dots.';
+}
+$('wp-reset').addEventListener('click',()=>{S.wpSpent=0;save();renderWP()});
+
+/* ---------- mana ---------- */
+function renderMana(){
+  const t=$('mana-track');t.innerHTML='';
+  for(let i=0;i<MANA_MAX;i++){
+    const d=document.createElement('button');d.type='button';d.className='dot'+(i>=S.mana?' spent':'');
+    d.setAttribute('aria-label','Mana '+(i+1));
+    d.addEventListener('click',()=>{S.mana=i<S.mana?S.mana-1:S.mana+1;save();renderMana()});
+    t.appendChild(d);
+  }
+  $('mana-count').textContent=S.mana;$('hdr-mana').textContent=S.mana;
+}
+$('mana-minus').addEventListener('click',()=>{S.mana=Math.max(0,S.mana-1);save();renderMana()});
+$('mana-plus').addEventListener('click',()=>{S.mana=Math.min(MANA_MAX,S.mana+1);save();renderMana()});
+$('mana-reset').addEventListener('click',()=>{S.mana=MANA_MAX;save();renderMana()});
+
+/* ---------- wisdom ---------- */
+(function(){const w=$('wis-pips');for(let i=0;i<10;i++){const p=document.createElement('span');p.className='pip'+(i>=WISDOM?' empty':'');w.appendChild(p)}})();
+
+/* ---------- active spells ---------- */
+function renderSlots(){
+  const w=$('slots');w.innerHTML='';
+  S.slots.forEach((v,i)=>{
+    const r=document.createElement('div');r.className='slot'+(i>=SLOTS?' over':'');
+    r.innerHTML='<span class="n">'+(i+1)+'</span><input id="slot-'+i+'" placeholder="'+(i>=SLOTS?'Over the limit: cost +'+(i-SLOTS+1)+' Reach':'Active spell, Potency, Duration…')+'" aria-label="Active spell '+(i+1)+'">'+'<button class="x" type="button" aria-label="Remove">✕</button>';
+    const inp=r.querySelector('input');inp.value=v;
+    inp.addEventListener('input',()=>{S.slots[i]=inp.value;save();updateSlotLabel()});
+    r.querySelector('.x').addEventListener('click',()=>{S.slots.splice(i,1);if(!S.slots.length)S.slots=[''];save();renderSlots()});
+    w.appendChild(r);
+  });
+  updateSlotLabel();
+}
+function updateSlotLabel(){const used=S.slots.filter(s=>s.trim()).length;$('slot-label').innerHTML=used+' <span>/ '+SLOTS+' slot</span>';$('slot-label').style.color=used>SLOTS?'var(--blood)':''}
+$('slot-add').addEventListener('click',()=>{S.slots.push('');save();renderSlots();const last=$('slot-'+(S.slots.length-1));if(last)last.focus()});
+
+/* ---------- notes ---------- */
+$('notes').value=S.notes||'';$('notes').addEventListener('input',e=>{S.notes=e.target.value;save()});
+
+/* ---------- skills ---------- */
+function renderSkills(){
+  const w=$('skills');w.innerHTML='';
+  SKILL_GROUPS.forEach(([g,unsk,list])=>{
+    const col=document.createElement('div');
+    col.innerHTML='<div class="sk-group">'+g+'<span>'+unsk+'</span></div>';
+    list.forEach(k=>{
+      const v=SK(k),row=document.createElement('div');row.className='skill'+(v?'':' zero');
+      row.innerHTML='<span class="skill-name">'+k+(ORDER_SKILLS.includes(k)?'<span class="tag order">Rote</span>':'')+(SPECS[k]?'<span class="spec">'+SPECS[k]+'</span>':'')+'</span>';
+      row.appendChild(dotsEl(v,5,k,nv=>{S.skills[k]=nv;save();renderSkills();updateRawHint();renderCombat();renderPlanners()}));
+      col.appendChild(row);
+    });
+    w.appendChild(col);
+  });
+}
+
+/* ---------- spells ---------- */
+const STD_DUR=['1 turn','2 turns','3 turns','5 turns','10 turns','20 turns'];
+const ADV_DUR=['1 scene / hour','1 day','1 week','1 month','1 year','Indefinite'];
+const STD_SC=['1 subject · Size 5','2 subjects · Size 6','4 subjects · Size 7','8 subjects · Size 8','16 subjects · Size 9'];
+const ADV_SC=['5 subjects · Size 5','10 subjects · Size 10','20 subjects · Size 15','40 subjects · Size 20','80 subjects · Size 25'];
+
+const SPELLS=[
+ {id:'accel',name:'Acceleration',arc:'Time',req:3,practice:'Perfecting',primary:'potency',mana:1,
+  skills:['Athletics','Drive','Stealth'],
+  book:['The mage can greatly accelerate her subject\'s temporal motion. From the perspective of onlookers she becomes a blur as if moving in fast motion, acting with impossible speed. At high enough levels, mundane creatures simply cannot perceive her at all, save perhaps for hair raising on the neck or a gut feeling that something is not quite right.',
+        'Multiply the subject\'s Speed by Potency. While under the spell\'s effect, the subject always goes first in a turn unless he chooses to delay his action, in which case he may interrupt any other character\'s turn with his own as a reflexive action, then return to the front of the Initiative queue the next turn. Other characters using pre-empting powers provoke a Clash of Wills. Acting in such accelerated time makes the subject very hard to hit, but only as long as he is able to concentrate; his Defense does not change, but add Potency to Defense before doubling it for Dodge actions. He may employ Defense (and Dodges) against firearms.'],
+  opts:[{id:'ext',label:'Extended actions: divide time per roll by Potency',reach:1,mana:0,short:'Faster extended actions'},
+        {id:'dodge',label:'Dodges gain the rote quality',reach:1,mana:1,short:'Rote Dodges'}],
+  effect:(p,c)=>{const sp=num('speed'),df=effDef();return 'Speed ×'+c.pot+(sp?' = <b>'+sp*c.pot+'</b>':'')+' · always acts first · Dodge: (Defense + '+c.pot+') × 2'+(df?' = <b>'+(df+c.pot)*2+'</b>':'')+' · Defense works vs. firearms · lasts '+c.dur+'.'}},
+ {id:'balance',name:'Find the Balance',arc:'Matter',req:2,practice:'Ruling',primary:'duration',mana:0,
+  skills:['Crafts','Persuasion','Science'],
+  def:{time:'ritual',dur:'a1',o:{eight:true}},
+  book:['Those initiated into the Stygian Mysteries know that understanding a tool is only the first step toward perfecting it. By subtly manipulating the density and purity of a tool, the mage improves its balance and heft. The tool grants its user the 9-Again quality for the Duration of the spell, so long as it\'s a tool that can benefit from balance or weight distribution.'],
+  opts:[{id:'eight',label:'The tool grants 8-again instead',reach:1,mana:0,short:'8-again'}],
+  extra:['<b>Tip:</b> cast it on the katana as a ritual before the job. Advanced Duration + 8-again fits in the free Reach, and with Matter as primary-factor Arcanum, <b>1 day</b> costs no dice.','<b>Permanence</b> (Matter ●● Attainment): pay 1 Mana instead of the Reach for Advanced Duration.'],
+  effect:(p,c)=>{const kat=A('Strength')+SK('Weaponry')+(SK('Weaponry')?2:0);return 'Katana grants <b>'+(p.o.eight?'8-again':'9-again')+'</b> for '+c.dur+': '+kat+' dice'+(p.o.eight?', rerolling every 8, 9 and 10':', rerolling 9s and 10s')+'. Takes the spell slot while it lasts.'}},
+ {id:'coax',name:'Coaxing the Spirits',arc:'Spirit',req:1,practice:'Compelling',primary:'potency',mana:0,
+  skills:['Politics','Athletics','Expression'],withstand:'Composure or Rank',
+  book:['Though most spirits are but slumbering motes that have no will or sapience, the mage may coax them to brief activity in accordance with their natures. She may compel the spirit (or its physical representation) to take a single instant action in accordance with its nature. A frightened animal might attack or flee, a car might start up, or a cliff face might start a small avalanche. The spell is Withstood by the Rank of the spirit coaxed or the Composure of a living representation, whichever is higher.'],
+  opts:[],
+  effect:(p,c)=>'The spirit (or the thing it lives in) takes <b>one instant action</b> true to its nature: a car starts, a door swings, a drone dives, a dog bolts. Potency '+c.pot+' minus its Rank or Composure must stay at 1 or more.'}
+];
+
+function defPlan(sp){
+  const a=ARC[sp.arc];
+  return {skill:[...sp.skills].sort((x,y)=>SK(y)-SK(x))[0],
+    pot:sp.primary==='potency'?a-1:0,
+    dur:sp.primary==='duration'?'s'+(a-1):'s0',
+    scale:'s0',range:'touch',time:'instant',swap:false,advPot:false,slot:false,o:{},
+    y:{mudra:true,conc:false,mantra:false,runes:false,env:false,katana:false},
+    intervals:0,sleepers:'none',prior:0,mitig:0,perm:false,...(sp.def?JSON.parse(JSON.stringify(sp.def)):{})};
+}
+function plan(id){const sp=SPELLS.find(s=>s.id===id);if(!S.plans[id])S.plans[id]=defPlan(sp);const p=S.plans[id];const d=defPlan(sp);for(const k in d)if(p[k]===undefined)p[k]=d[k];return p}
+
+function compute(sp,p){
+  const a=ARC[sp.arc],base=GNOSIS+a;
+  const primary=p.swap?(sp.primary==='potency'?'duration':'potency'):sp.primary;
+  const step=(i,isP)=>2*Math.max(0,i-(isP?a-1:0));
+  const durAdv=p.dur[0]==='a',durI=+p.dur.slice(1),scAdv=p.scale[0]==='a',scI=+p.scale.slice(1);
+  const penPot=step(p.pot,primary==='potency'),penDur=step(durI,primary==='duration'),penSc=2*scI;
+  const pen=penPot+penDur+penSc;
+  let reach=0;const rl=[];const add=(n,l)=>{if(n){reach+=n;rl.push(l+(n>1?' ('+n+')':''))}};
+  const indef=durAdv&&durI===5;
+  add(p.time==='instant'?1:0,'Instant');
+  const perm=durAdv&&p.perm&&sp.arc==='Matter';
+  add(durAdv&&!perm?1:0,'Adv. Duration');add(indef?1:0,'Indefinite');
+  add(scAdv?1:0,'Adv. Scale');add(p.advPot?1:0,'Adv. Potency');
+  add(p.range==='sensory'?1:p.range==='remote'?2:0,p.range==='remote'?'Remote':'Sensory');
+  add(p.swap?1:0,'Swap primary');
+  const used=S.slots.filter(s=>s.trim()).length,overSlots=Math.max(0,used-SLOTS+1);
+  add(p.slot?overSlots||1:0,'No free slot');
+  sp.opts.forEach(o=>{if(p.o[o.id])add(o.reach,o.short)});
+  const free=6-sp.req,over=Math.max(0,reach-free);
+  // yantras
+  const ys=[];const skillDots=S.skills[p.skill]||0;
+  if(p.y.mudra)ys.push(['Mudra ('+p.skill+' '+skillDots+')',skillDots,true]);
+  if(p.y.conc)ys.push(['Concentration',2,true]);
+  if(p.y.mantra)ys.push(['Mantra',2,false]);
+  if(p.y.runes)ys.push(['Runes',2,true]);
+  if(p.y.env)ys.push(['Environment',1,true]);
+  if(p.y.katana)ys.push(['Katana',1,true]);
+  const ysum=ys.reduce((s,y)=>s+y[1],0);
+  let net=ysum-pen,capped=false;if(net>5){net=5;capped=true}
+  const ritualBonus=p.time==='ritual'?Math.min(5,Math.max(0,p.intervals|0)):0;
+  const pool=base+net+ritualBonus;
+  // paradox
+  let pdx=null,pdxMods=[];
+  if(over>0){
+    pdx=over*1;
+    if(p.prior>0){pdx+=+p.prior;pdxMods.push('+'+p.prior+' earlier rolls')}
+    if(p.sleepers!=='none'){pdx+=1;pdxMods.push('+1 Sleepers')}
+    if(p.y.katana){pdx-=2;pdxMods.push('−2 katana')}
+    if(p.mitig>0){pdx-=+p.mitig;pdxMods.push('−'+p.mitig+' Mana')}
+  }
+  // mana
+  let mana=sp.mana+(indef?1:0)+(perm?1:0);
+  sp.opts.forEach(o=>{if(p.o[o.id])mana+=o.mana});
+  const mitigMana=over>0?(+p.mitig||0):0;mana+=mitigMana;
+  // time
+  let turns=1,timeTxt;
+  const nonRefl=p.time==='instant'?Math.max(0,ys.length-(ys.some(y=>y[2])?1:0)):0;
+  const manaTurns=p.time==='instant'?Math.max(0,mana-1):0;
+  if(p.time==='instant'){turns=1+nonRefl+manaTurns;timeTxt=turns===1?'Instant':turns+' turns'}
+  else{const iv=1+Math.max(0,p.intervals|0);timeTxt=(iv*3)+' hours'}
+  const potLvl=p.pot+1,durLbl=(durAdv?ADV_DUR:STD_DUR)[durI];
+  // warnings
+  const W=[];
+  if(ys.length>2)W.push(['bad','Gnosis 1 allows only 2 Yantras; you picked '+ys.length+'.']);
+  if(p.y.mudra&&!skillDots)W.push(['','Mudra adds 0: set your '+p.skill+' dots in the Sheet tab.']);
+  if(nonRefl)W.push(['info','Only one Yantra is reflexive in an instant cast'+(p.y.mantra?' (and Mantra never is)':'')+': +'+nonRefl+' turn'+(nonRefl>1?'s':'')+'.']);
+  if(manaTurns)W.push(['info','Mana '+mana+' is over 1 per turn: +'+manaTurns+' turn'+(manaTurns>1?'s':'')+', or pay it in the turns before.']);
+  if(capped)W.push(['info','Yantras net capped at +5.']);
+  if(p.y.conc)W.push(['info','Concentration: taking damage or a non-reflexive action ends the spell.']);
+  if(p.mitig>0&&over===0)W.push(['','No Paradox to mitigate, that Mana is not counted.']);
+  if(mana>S.mana)W.push(['bad','You only have '+S.mana+' Mana left.']);
+  if(p.sleepers!=='none'&&over>0){const t={few:'9-again',large:'8-again',crowd:'rote quality'}[p.sleepers];W.push(['','Sleeper witnesses give the Paradox roll '+t+'.'])}
+  if(p.slot&&!used)W.push(['info','You have a free slot right now, the extra Reach may not be needed.']);
+  return {base,a,pen,penPot,penDur,penSc,reach,rl,free,over,ys,ysum,net,ritualBonus,pool,pdx,pdxMods,mana,timeTxt,W,pot:potLvl,dur:durLbl,primary};
+}
+
+function sel(id,k,opts,val){return '<select id="'+id+'-'+k+'" data-k="'+k+'">'+opts.map(o=>'<option value="'+o[0]+'"'+(String(o[0])===String(val)?' selected':'')+'>'+o[1]+'</option>').join('')+'</select>'}
+function chk(id,k,label,on,extra,dis){return '<label class="chk'+(dis?' dis':'')+'"><input type="checkbox" id="'+id+'-'+k+'" data-k="'+k+'"'+(on?' checked':'')+(dis?' disabled':'')+'> '+label+(extra?' <em>'+extra+'</em>':'')+'</label>'}
+
+function plannerHTML(sp){
+  const p=plan(sp.id),id=sp.id,a=ARC[sp.arc];
+  const potOpts=[0,1,2,3,4].map(i=>[i,'Potency '+(i+1)]);
+  const durOpts=STD_DUR.map((l,i)=>['s'+i,l]).concat(ADV_DUR.map((l,i)=>['a'+i,l+' · Adv']));
+  const scOpts=STD_SC.map((l,i)=>['s'+i,l]).concat(ADV_SC.map((l,i)=>['a'+i,l+' · Adv']));
+  const other=sp.primary==='potency'?'Duration':'Potency';
+  return '<div class="pl-grid">'+
+    '<label class="f"><span>Mudra skill</span>'+sel(id,'skill',sp.skills.map(k=>[k,k+' ('+SK(k)+')'+(ORDER_SKILLS.includes(k)?' · Rote':'')]),p.skill)+'</label>'+
+    '<label class="f"><span>Potency</span>'+sel(id,'pot',potOpts,p.pot)+'</label>'+
+    '<label class="f"><span>Duration</span>'+sel(id,'dur',durOpts,p.dur)+'</label>'+
+    '<label class="f"><span>Scale</span>'+sel(id,'scale',scOpts,p.scale)+'</label>'+
+    '<label class="f"><span>Range</span>'+sel(id,'range',[['touch','Touch / self'],['sensory','Sensory · +1 Reach'],['remote','Remote view · +2 Reach']],p.range)+'</label>'+
+    '<label class="f"><span>Casting time</span>'+sel(id,'time',[['instant','Instant · +1 Reach'],['ritual','Ritual · 3 hours']],p.time)+'</label>'+
+  '</div>'+
+  '<div class="label group-l">Reach options</div><div class="checks">'+
+    chk(id,'swap','Make '+other+' the primary factor',p.swap,'+1')+
+    chk(id,'advPot','Advanced Potency (+2 vs. Dispel)',p.advPot,'+1')+
+    chk(id,'slot','Cast with no free slot',p.slot,'+1/over')+
+    (sp.arc==='Matter'?chk(id,'perm','Permanence: Mana instead of Reach for Adv. Duration',p.perm,'1 Mana'):'')+
+    sp.opts.map(o=>chk(id,'o.'+o.id,o.label,p.o[o.id],'+'+o.reach+(o.mana?' · '+o.mana+' Mana':''))).join('')+
+  '</div>'+
+  '<div class="label group-l">Yantras · max 2</div><div class="checks">'+
+    chk(id,'y.mudra','Mudra',p.y.mudra,'+skill')+chk(id,'y.conc','Concentration',p.y.conc,'+2')+chk(id,'y.mantra','Mantra',p.y.mantra,'+2')+
+    chk(id,'y.runes','Runes',p.y.runes,'+2')+chk(id,'y.env','Environment',p.y.env,'+1')+chk(id,'y.katana','Katana',p.y.katana,'+1 · −2 Paradox')+
+  '</div>'+
+  '<div class="inline-nums">'+
+    '<label class="f"><span>Sleepers watching</span>'+sel(id,'sleepers',[['none','None'],['few','A few'],['large','Large group'],['crowd','Crowd']],p.sleepers)+'</label>'+
+    '<label class="f"><span>Earlier Paradox rolls this scene</span><input class="num" type="number" min="0" max="9" id="'+id+'-prior" data-k="prior" value="'+p.prior+'"></label>'+
+    '<label class="f"><span>Mana to mitigate</span><input class="num" type="number" min="0" max="10" id="'+id+'-mitig" data-k="mitig" value="'+p.mitig+'"></label>'+
+    '<label class="f"><span>Extra ritual intervals</span><input class="num" type="number" min="0" max="5" id="'+id+'-intervals" data-k="intervals" value="'+p.intervals+'"></label>'+
+  '</div>'+
+  '<div class="result" id="'+id+'-out"></div>'+
+  '<div class="mini-btns"><button class="btn ghost" type="button" data-reset="'+id+'">Reset this plan</button>'+
+  (sp.mana||sp.opts.some(o=>o.mana)?'<button class="btn" type="button" data-pay="'+id+'">Pay Mana</button>':'')+'</div>';
+}
+
+function resultHTML(sp,c){
+  const status=c.pool>=1?{cls:'main',v:c.pool,l:'dice to roll'}:c.pool>=-5?{cls:'main',v:'1',l:'chance die (10s only)'}:{cls:'main',v:'✕',l:'too complex: fails'};
+  const pdxCell=c.pdx===null?'<div class="res-cell okc"><div class="v">0</div><div class="l">no Paradox roll</div></div>':
+    '<div class="res-cell danger"><div class="v">'+(c.pdx>0?c.pdx:'1')+'</div><div class="l">'+(c.pdx>0?'Paradox dice':'Paradox chance die')+'</div></div>';
+  const math='<b>'+c.base+'</b> (Gnosis 1 + '+sp.arc+' '+c.a+')'+
+    (c.ys.length?' + <b>'+c.ysum+'</b> Yantras ('+c.ys.map(y=>y[0]+' +'+y[1]).join(', ')+')':'')+
+    (c.pen?' − <b>'+c.pen+'</b> factors ('+[c.penPot?'Potency '+c.penPot:'',c.penDur?'Duration '+c.penDur:'',c.penSc?'Scale '+c.penSc:''].filter(Boolean).join(', ')+')':' · factors free')+
+    (c.ritualBonus?' + <b>'+c.ritualBonus+'</b> ritual':'')+
+    '<br>Primary factor: <b>'+(c.primary==='potency'?'Potency':'Duration')+'</b>, free up to step '+c.a+'. Reach: '+(c.rl.length?c.rl.join(', '):'none')+' · <b>'+c.reach+'</b> used of <b>'+c.free+'</b> free'+
+    (c.pdx!==null?' → '+c.over+' over'+(c.pdxMods.length?' ('+c.pdxMods.join(', ')+')':''):'')+'.';
+  return '<div class="res-top">'+
+    '<div class="res-cell '+status.cls+'"><div class="v">'+status.v+'</div><div class="l">'+status.l+'</div></div>'+
+    '<div class="res-cell"><div class="v">'+c.reach+'<small> / '+c.free+'</small></div><div class="l">Reach used / free</div></div>'+
+    pdxCell+
+    '<div class="res-cell"><div class="v">'+c.mana+'</div><div class="l">Mana</div></div>'+
+    '<div class="res-cell"><div class="v" style="font-size:18px">'+c.timeTxt+'</div><div class="l">casting time</div></div>'+
+  '</div>'+
+  '<div class="res-math"><span class="label" style="display:block;margin-bottom:2px">Effect</span><span style="color:var(--ink);font-size:15px">'+sp.effect(plan(sp.id),c)+'</span></div>'+
+  '<div class="res-math">'+math+'</div>'+
+  (c.W.length?'<div class="res-warn">'+c.W.map(w=>'<div class="'+w[0]+'">'+w[1]+'</div>').join('')+'</div>':'');
+}
+
+function renderSpells(){
+  const list=$('spell-list');list.innerHTML='';
+  SPELLS.forEach(sp=>{
+    const a=ARC[sp.arc],card=document.createElement('article');card.className='spell';card.style.setProperty('--c',ARC_C[sp.arc]);card.id='spell-'+sp.id;
+    const freeR=6-sp.req;
+    card.innerHTML=
+      '<div class="spell-top">'+
+        '<div class="spell-title"><span class="spell-name">'+sp.name+'</span><span class="spell-arc">'+sp.arc+' '+'●'.repeat(sp.req)+'</span></div>'+
+        '<div class="tags"><span class="tag '+ARC_T[sp.arc]+'">Rote</span><span class="tag">'+sp.practice+'</span><span class="tag">Primary: '+(sp.primary==='potency'?'Potency':'Duration')+'</span>'+(sp.mana?'<span class="tag cost">'+sp.mana+' Mana</span>':'')+(sp.withstand?'<span class="tag">Withstand: '+sp.withstand+'</span>':'')+'</div>'+
+        '<div class="pool-strip">'+
+          '<div class="ps"><span class="ps-v">'+(GNOSIS+a)+'</span><span class="ps-l">Gnosis + '+sp.arc+'</span></div>'+
+          '<div class="ps"><span class="ps-v" id="'+sp.id+'-mud">+'+(S.skills[plan(sp.id).skill]||0)+'</span><span class="ps-l">Mudra · '+sp.skills.join(' / ')+'</span></div>'+
+          '<div class="ps"><span class="ps-v">'+freeR+'</span><span class="ps-l">free Reach</span></div>'+
+          '<div class="ps grow"><span class="ps-v" style="font-size:15px">'+(sp.primary==='potency'?'Potency '+a:STD_DUR[a-1]+' / '+ADV_DUR[a-1])+'</span><span class="ps-l">free primary factor</span></div>'+
+        '</div>'+
+      '</div>'+
+      '<details class="fold"><summary>Book text &amp; Reach effects</summary><div class="fold-body"><div class="book">'+sp.book.map(t=>'<p>'+t+'</p>').join('')+'</div>'+
+        ((sp.opts.length||sp.extra)?'<div class="reach-list">'+sp.opts.map(o=>'<div><b>+'+o.reach+' Reach'+(o.mana?', '+o.mana+' Mana':'')+':</b> '+o.label+'.</div>').join('')+(sp.extra||[]).map(t=>'<div>'+t+'</div>').join('')+'</div>':'')+
+      '</div></details>'+
+      '<details class="fold planner"'+(S.openPlan===sp.id?' open':'')+'><summary>Plan this cast</summary><div class="fold-body">'+plannerHTML(sp)+'</div></details>';
+    list.appendChild(card);
+    card.querySelector('details.planner').addEventListener('toggle',e=>{if(e.target.open){S.openPlan=sp.id;save()}});
+    wire(card,sp);
+  });
+  renderPlanners();
+}
+
+function wire(card,sp){
+  card.querySelectorAll('[data-k]').forEach(el=>{
+    const handler=()=>{
+      const p=plan(sp.id),k=el.dataset.k;
+      let v=el.type==='checkbox'?el.checked:el.value;
+      if(['pot','prior','mitig','intervals'].includes(k))v=Math.max(0,parseInt(v,10)||0);
+      if(k.startsWith('o.'))p.o[k.slice(2)]=v;
+      else if(k.startsWith('y.'))p.y[k.slice(2)]=v;
+      else p[k]=v;
+      save();renderPlanners();
+    };
+    el.addEventListener(el.tagName==='INPUT'&&el.type==='number'?'input':'change',handler);
+  });
+  const r=card.querySelector('[data-reset]');
+  if(r)r.addEventListener('click',()=>{S.plans[sp.id]=defPlan(sp);save();S.openPlan=sp.id;renderSpells()});
+  const pay=card.querySelector('[data-pay]');
+  if(pay)pay.addEventListener('click',()=>{const c=compute(sp,plan(sp.id));S.mana=Math.max(0,S.mana-c.mana);save();renderMana();renderPlanners();pay.textContent='Paid '+c.mana;setTimeout(()=>{pay.textContent='Pay Mana'},1400)});
+}
+
+function renderPlanners(){
+  SPELLS.forEach(sp=>{
+    const out=$(sp.id+'-out');if(!out)return;
+    const c=compute(sp,plan(sp.id));out.innerHTML=resultHTML(sp,c);
+    const m=$(sp.id+'-mud');if(m)m.textContent='+'+(S.skills[plan(sp.id).skill]||0);
+  });
+}
+
+/* ---------- init ---------- */
+renderAttrs();updateRawHint();renderArcana();renderHealth();renderWP();renderMana();renderSlots();renderSkills();renderCombat();renderArmor();renderSpells();
+})();
+</script>
+</body>
+</html>
